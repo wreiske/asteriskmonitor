@@ -1,4 +1,4 @@
-Starmonitor
+Asterisk monitor
 =====
 *mon (Asterisk Monitor) is an open source real time asterisk web monitor built with meteor.js
 
