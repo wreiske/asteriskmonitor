@@ -1,0 +1,63 @@
+<template name="setup">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">First time setup</h3>
+        </div>
+        <div class="panel-body">
+            <p>Welcome to your new <span class="glyphicon glyphicon-asterisk"></span>mon setup. To get started fill out the form below and hit Continue.</p>
+            <form action="/" method="POST">
+                <p>
+                    <div class="input-group input-group-small" id="div_email">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </span>
+                        <input type="email" required name="email" placeholder="Please enter your current email address." class="form-control">
+                    </div>
+                </p>
+                <p>
+                    <div class="input-group input-group-small" id="div_fullname">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        <input type="text" required name="fullname" class="form-control" placeholder="This is your full name, first and last.">
+                    </div>
+                </p>
+                <p>
+                    <div class="input-group input-group-small" id="div_username">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-heart-empty"></span>
+                        </span>
+                        <input type="text" required name="username" class="form-control" placeholder="What would you like your administrator username to be?">
+                    </div>
+                </p>
+                <p>
+                    <div class="input-group input-group-small" id="div_password">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-lock"></span>
+                        </span>
+                        <input type="password" required name="password" class="form-control" placeholder="Pick something strong for your password.">
+                    </div>
+                </p>
+                <p>
+                    <div class="input-group input-group-small" id="div_password_verify">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-lock"></span>
+                        </span>
+                        <input type="password" required name="password_verify" class="form-control" placeholder="Please type your password again.">
+                    </div>
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-primary btn-small">Continue</button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div style="display:none;" id="error" class="panel panel-danger">
+        <div class="panel-heading">
+            <h3 class="panel-title">Error!</h3>
+        </div>
+        <div class="panel-body" id="errors">
+        </div>
+    </div>
+</template>

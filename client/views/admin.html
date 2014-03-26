@@ -1,0 +1,68 @@
+<template name="admin">
+    {{#if isadmin}} {{>adminstart}} {{else}} {{>notadmin}} {{/if}}
+</template>
+<template name="adminstart">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Asterisk Server Information</h3>
+        </div>
+        <div class="panel-body">
+            <form action="/admin" method="POST">
+                <p>
+                    <div class="input-group input-group-small">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-cloud"></span>
+                        </span>
+                        <input type="text" name="ami_host" value="{{ami.host}}" class="form-control" placeholder="Host">
+                    </div>
+                </p>
+                <p>
+                    <div class="input-group input-group-small">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-cloud"></span>
+                        </span>
+                        <input type="text" name="ami_port" value="{{ami.port}}" class="form-control" placeholder="Port">
+                    </div>
+                </p>
+                <p>
+                    <div class="input-group input-group-small">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        <input type="text" name="ami_user" value="{{ami.user}}" class="form-control" placeholder="Username">
+                    </div>
+                </p>
+                <p>
+                    <div class="input-group input-group-small">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-lock"></span>
+                        </span>
+                        <input type="password" name="ami_pass" value="{{ami.pass}}" class="form-control" placeholder="Password">
+                    </div>
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-primary btn-small">Save</button>
+                </p>
+            </form>
+            <div style="display:none;" id="error" class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Error!</h3>
+                </div>
+                <div class="panel-body" id="errors">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</template>
+
+<template name="notadmin">
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h3 class="panel-title">Access Denied</h3>
+        </div>
+        <div class="panel-body">
+            You do not have access to this feature.
+        </div>
+    </div>
+</template>

@@ -1,0 +1,14 @@
+<template name="warnings">
+    {{#if isadmin}} 
+    {{#unless ami_connected}}
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h3 class="panel-title">Asterisk Server is not connected</h3>
+        </div>
+        <div class="panel-body">
+            Please make sure the Asterisk Server Information is correct in the <a href="/admin">Administration Panel</a>. You will not recieve any events in <span class="glyphicon glyphicon-asterisk"></span>monitor until this is resolved.
+        </div>
+    </div>
+    {{/unless}} 
+    {{/if}}
+</template>

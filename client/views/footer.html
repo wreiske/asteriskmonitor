@@ -1,0 +1,13 @@
+<template name="footer">
+    <div id="footer">
+        <div class="container">
+            <p class="text-muted">
+                <span class="glyphicon glyphicon-asterisk"></span>monitor - Realtime Asterisk Web Monitor &copy; Coded in Meteor by Will Reiske 
+                {{#if isadmin}} 
+                &dash;
+                <a href="/admin">Administration Panel</a>
+                {{/if}}
+            </p>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,12 @@
+{
+  "packages": {
+    "bootstrap-3": {},
+    "fast-render": {},
+    "npm": {},
+    "moment": {},
+    "user-status": {},
+    "accounts-ui-bootstrap-3": {},
+    "router": {},
+    "crypto-md5": {}
+  }
+}

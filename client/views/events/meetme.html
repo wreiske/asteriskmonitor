@@ -1,0 +1,55 @@
+<template name="meetme">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">MeetMe
+                <span class="badge">{{bridge_count}}</span>
+            </h3>
+        </div>
+        <div class="panel-body">
+            {{#each bridge}}
+            <div class="modal" id="bridge_{{this._id}}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title">{{this.calleridname}} - {{this.calleridnum}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            {{{amiblock this}}}
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" data-dismiss="modal" class="btn">Close</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>User Number</th>
+                            <th>Caller ID Name</th>
+                            <th>Caller ID Number</th>
+                            <th>Timestamp</th>
+                            <th>Bridge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bridge}}
+                        <tr data-toggle="bridge_{{this._id}}" onmousedown="$('#bridge_{{this._id}}').modal({show:true});">
+                            <td>{{this.usernum}}</td>
+                            <td>{{this.calleridname}}</td>
+                            <td>{{this.calleridnum}}</td>
+                            <td>{{moment this.starmon_timestamp}}</td>
+                            <td>
+                                <span class="label label-warning">{{this.meetme}}</span>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>

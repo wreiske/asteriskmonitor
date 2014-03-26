@@ -1,0 +1,21 @@
+<head>
+    <title>*monitor - Realtime Asterisk Web Monitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Realtime Asterisk Web Monitoring">
+    <meta name="author" content="Will Reiske">
+</head>
+
+<body>
+    <div id="wrap">
+        {{>header}}
+        <div class="container">
+            {{>warnings}}
+            {{renderPage}}
+        </div>
+    </div>
+    {{>footer}}
+</body>
+
+<template name="loading">
+    <h1>Loading...</h1>
+</template>
