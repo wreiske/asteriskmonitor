@@ -1,3 +1,21 @@
 <template name="amilog">
-<h1>Ami Log</h1>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Ami Log (last 25 events)
+            </h3>
+        </div>
+        <div class="panel-body">
+            {{#each event}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{this.event}} {{moment this.starmon_timestamp}}</h3>
+                </div>
+                <div class="panel-body">
+                    {{{amitable this}}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
 </template>
