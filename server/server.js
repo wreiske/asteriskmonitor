@@ -209,13 +209,6 @@ https://wiki.asterisk.org/wiki/display/AST/Asterisk+11+AMI+Events
             ami.on('join', Meteor.bindEnvironment(function(evt) {
                 evt.starmon_timestamp = Date.now();
                 console.log(evt);
-
-
-                HTTP.post('http://zeus.med-web.com/env.cgi', evt, function(){
-                    console.log('posted');
-                });
-
-
                 Queue.insert(evt);
             }));
 
