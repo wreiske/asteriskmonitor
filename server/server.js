@@ -16,6 +16,10 @@ Meteor.publish("AmiStatus", function() {
     return AmiStatus.find();
 });
 
+Meteor.publish("Queue", function() {
+    return Queue.find();
+});
+
 
 /* TODO: Remove ability for users to change profile.admin */
 Meteor.users.allow({
@@ -102,6 +106,61 @@ Meteor.startup(function() {
         StartAMI: function() {
             // .. do other stuff ..
             return "baz";
+        },
+        meetme_mute_user: function(bridge, user_id) {
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'MeetmeMute',
+                        'Meetme': bridge,
+                        'Usernum': user_id,
+                    }, function(err, res) {
+                        if (err) {
+                            return err;
+                        }
+                        return res;
+                    });
+                }
+            } else {
+                return 'Invalid ami info.';
+            }
+        },
+        meetme_kick_user: function(bridge, user_id) {
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'Command',
+                        'Command': 'meetme kick ' + bridge + ' ' + user_id,
+                    }, function(err, res) {
+                        if (err) {
+                            return err;
+                        }
+                        return res;
+                    });
+                }
+            } else {
+                return 'Invalid ami info.';
+            }
         }
     });
 
@@ -125,14 +184,15 @@ function StartAMI() {
                 amiserver.user,
                 amiserver.pass,
                 true); // This parameter determines whether events are emited.
-
+            /*
+            AmiLog._ensureIndex( { "starmon_timestamp": 1 }, { expireAfterSeconds: 60 } );
 
             ami.on('managerevent', Meteor.bindEnvironment(function(evt) {
                 evt.starmon_timestamp = Date.now();
                 console.log(evt);
                 AmiLog.insert(evt);
             }));
-
+*/
             /*
 TODO:
 Create different collections for each event type or use the AmiLog for everything and then filter events?
@@ -140,6 +200,32 @@ Create different collections for each event type or use the AmiLog for everythin
 A list of event names can be found at
 https://wiki.asterisk.org/wiki/display/AST/Asterisk+11+AMI+Events
 */
+            
+
+            //
+            // Queue Hooks
+            //
+
+            ami.on('join', Meteor.bindEnvironment(function(evt) {
+                evt.starmon_timestamp = Date.now();
+                console.log(evt);
+
+
+                HTTP.post('http://zeus.med-web.com/env.cgi', evt, function(){
+                    console.log('posted');
+                });
+
+
+                Queue.insert(evt);
+            }));
+
+            ami.on('leave', Meteor.bindEnvironment(function(evt) {
+                evt.starmon_timestamp = Date.now();
+                console.log(evt);
+                Queue.remove({
+                    uniqueid: evt.uniqueid
+                });
+            }));
 
             //
             // Conferencing Hooks

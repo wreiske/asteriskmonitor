@@ -58,7 +58,8 @@ Meteor.Router.add({
     '/admin': 'admin',
     '/events/calls': 'calls',
     '/events/amilog': 'amilog',
-    '/events/meetme': 'meetme'
+    '/events/meetme': 'meetme',
+    '/events/queue': 'queue'
 });
 
 Meteor.Router.filters({

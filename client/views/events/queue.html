@@ -1,4 +1,4 @@
-<template name="meetme">
+<template name="queue">
     <div style="display:none;" id="error" class="panel panel-danger">
         <div class="panel-heading">
             <h3 class="panel-title">Error!</h3>
@@ -8,13 +8,13 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">MeetMe
-                <span class="badge">{{bridge_count}}</span>
+            <h3 class="panel-title">Call Queue
+                <span class="badge">{{caller_count}}</span>
             </h3>
         </div>
         <div class="panel-body">
-            {{#each bridge}}
-            <div class="modal" id="bridge_{{this._id}}">
+            {{#each caller}}
+            <div class="modal" id="queue_caller_{{this._id}}">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -39,21 +39,23 @@
                             <th>Caller ID Name</th>
                             <th>Caller ID Number</th>
                             <th>Timestamp</th>
-                            <th>Bridge</th>
+                            <th>Queue</th>
+                            <th>Position</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{#each bridge}}
-                        <tr data-toggle="bridge_{{this._id}}">
-                            <td>{{this.usernum}}</td>
+                        {{#each caller}}
+                        <tr data-toggle="queue_caller_{{this._id}}">
+                            <td>{{this.count}}</td>
                             <td>{{this.calleridname}}</td>
                             <td>{{this.calleridnum}}</td>
                             <td>{{moment this.starmon_timestamp}}</td>
                             <td>
-                                <font size="3px">{{this.meetme}}</font>
+                                <font size="3px">{{this.queue}}</font>
                             </td>
-                            <td><a onmousedown="Template.meetme.meetme_kick_user({{this.meetme}}, {{this.usernum}});">[Kick]</a> - <a onmousedown="Template.meetme.meetme_mute_user({{this.meetme}}, {{this.usernum}});">[Mute]</a> - <a onmousedown="$('#bridge_{{this._id}}').modal({show:true});">[Info]</a></td>
+                            <td>{{this.position}}</td>
+                            <td>Something here</td>
                         </tr>
                         {{/each}}
                     </tbody>
