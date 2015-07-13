@@ -6,16 +6,29 @@
 </head>
 
 <body>
+</body>
+<template name="layout">
+    {{>header}}
     <div id="wrap">
-        {{>header}}
         <div class="container">
-            {{>warnings}}
-            {{renderPage}}
+            {{>yield}}
         </div>
     </div>
     {{>footer}}
-</body>
-
+</template>
 <template name="loading">
-    <h1>Loading...</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Loading..</h3>
+                    </div>
+                    <div class="panel-body">
+                        Please Wait
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

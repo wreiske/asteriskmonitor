@@ -1,5 +1,5 @@
 <template name="editprofile">
-    <hr />{{#unless Meteor.user.profile.name}}
+    <hr />{{#unless currentUser.profile.name}}
     <div class="panel panel-warning">
         <div class="panel-heading">
             <h3 class="panel-title">No Full Name associated with this account</h3>
@@ -8,7 +8,7 @@
             Please make sure you have filled out your profile information fully.
         </div>
     </div>
-    {{/unless}} {{#unless Meteor.user.username}}
+    {{/unless}} {{#unless currentUser.username}}
     <div class="panel panel-warning">
         <div class="panel-heading">
             <h3 class="panel-title">No username associated with this account</h3>
@@ -25,7 +25,7 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-6 col-sm-3">
-                    <img width="265" class="img-thumbnail" src="http://www.gravatar.com/avatar/{{md5 Meteor.user.emails.0.address}}?s=265" alt="{{this.emails.0.address}}" />
+                    <img width="265" class="img-thumbnail" src="http://www.gravatar.com/avatar/{{md5 currentUser.emails.[0].address}}?s=265" alt="{{currentUser.emails.[0].address}}" />
                 </div>
                 <div class="col-xs-12 col-md-9">
                     <p>
@@ -36,7 +36,7 @@
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-envelope"></span>
                             </span>
-                            <input type="email" disabled id="email" value="{{Meteor.user.emails.0.address}}" class="form-control">
+                            <input type="email" disabled id="email" value="{{currentUser.emails.[0].address}}" class="form-control">
                         </div>
                     </p>
                     <form action="/" method="POST">
@@ -45,7 +45,7 @@
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-user"></span>
                                 </span>
-                                <input type="text" name="fullname" value="{{Meteor.user.profile.name}}" class="form-control" placeholder="Full Name">
+                                <input type="text" name="fullname" value="{{currentUser.profile.name}}" class="form-control" placeholder="Full Name">
                             </div>
                         </p>
                         <p>
@@ -53,7 +53,7 @@
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-heart-empty"></span>
                                 </span>
-                                <input type="text" name="username" value="{{Meteor.user.username}}" class="form-control" placeholder="Username">
+                                <input type="text" name="username" value="{{currentUser.username}}" class="form-control" placeholder="Username">
                             </div>
                         </p>
                         <p>

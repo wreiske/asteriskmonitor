@@ -21,15 +21,15 @@
                 <ul class="nav navbar-nav pull-right">
                     {{#if notloggedin}}
                     <li {{active "login" currentPage}}>
-                        <a href="/home">Please Login</a>
+                        <a href="/">Please Login</a>
                     </li>
                     <li {{active "about" currentPage}}>
-                        <a href="/about">About</a>
+                        <a href="{{pathFor 'about'}}">About</a>
                     </li>
                     {{else}}
 
                     <li {{active "home" currentPage}}>
-                        <a href="/home">Home</a>
+                        <a href="{{pathFor 'home'}}">Home</a>
                     </li>
                     <li {{active "events" currentPage}} class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Events <b class="caret"></b></a>
@@ -48,8 +48,7 @@
                             </li>
                         </ul>
                     </li>
-                    {{/if}} 
-                    {{ loginButtons }}
+                    {{/if}}
                 </ul>
                 {{/if}}
             </div>

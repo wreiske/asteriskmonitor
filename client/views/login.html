@@ -1,8 +1,15 @@
 <template name="login">
-    <div class="jumbotron">
-        <div class="container">
-            <h1>Welcome to your <span class="glyphicon glyphicon-asterisk"></span>monitor Administration Panel!</h1>
-            <p>To get started you need to first login. Click the "Sign In" button on the top right of your screen.</p>
+        <div class="jumbotron">
+            <div class="container">
+                <h1>Welcome to your <span class="glyphicon glyphicon-asterisk"></span>monitor Administration Panel!</h1>
+                <p>To get started you need to first login.</p>
+            </div>
         </div>
-    </div>
+        <div class="container">
+            <div class="row">
+                <div class="main">
+                    {{>atForm}}
+                </div>
+            </div>
+        </div>
 </template>

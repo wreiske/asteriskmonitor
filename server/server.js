@@ -1,4 +1,4 @@
-var asterisk = new Meteor.require('asterisk-manager');
+var asterisk = new Meteor.npmRequire('asterisk-manager');
 
 Meteor.publish("AmiLog", function() {
     return AmiLog.find();
@@ -37,7 +37,8 @@ Meteor.publish("directory", function() {
     return Meteor.users.find({}, {
         fields: {
             emails: 1,
-            profile: 1
+            profile: 1,
+            admin: 1
         }
     });
 });
@@ -72,8 +73,8 @@ Meteor.startup(function() {
                             console.log("Ping result.");
 
                             if (ServerSettings.find({
-                                'module': 'ami'
-                            }).count() == 0) {
+                                    'module': 'ami'
+                                }).count() == 0) {
 
                                 ServerSettings.insert({
                                     'module': 'ami',
@@ -168,6 +169,22 @@ Meteor.startup(function() {
     StartAMI();
 });
 
+Meteor.methods({
+    "userExists": function(username) {
+        return !!Meteor.users.findOne({
+            username: username
+        });
+    },
+});
+
+Accounts.onCreateUser(function(options, user) {
+    if (Meteor.users.find().count() == 0) {
+        user.admin = true;
+    }
+    console.log(user);
+    return user;
+});
+
 
 var amiStarted = false;
 
@@ -201,7 +218,7 @@ Create different collections for each event type or use the AmiLog for everythin
 A list of event names can be found at
 https://wiki.asterisk.org/wiki/display/AST/Asterisk+11+AMI+Events
 */
-            
+
 
             //
             // Queue Hooks

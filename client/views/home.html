@@ -1,4 +1,4 @@
 <template name="home">
-    <h1>Welcome {{Meteor.user.emails.0.address}}</h1>
+    <h1>Welcome {{currentUser.emails.[0].address}}</h1> 
     {{>editprofile}}
 </template>
