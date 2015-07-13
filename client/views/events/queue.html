@@ -35,13 +35,12 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>User Number</th>
-                            <th>Caller ID Name</th>
-                            <th>Caller ID Number</th>
-                            <th>Timestamp</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Number</th>
+                            <th>Time</th>
                             <th>Queue</th>
                             <th>Position</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,10 +51,9 @@
                             <td>{{this.calleridnum}}</td>
                             <td>{{moment this.starmon_timestamp}}</td>
                             <td>
-                                <font size="3px">{{this.queue}}</font>
+                                {{this.queue}}
                             </td>
                             <td>{{this.position}}</td>
-                            <td>Something here</td>
                         </tr>
                         {{/each}}
                     </tbody>

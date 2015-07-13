@@ -187,12 +187,13 @@ function StartAMI() {
             /*
             AmiLog._ensureIndex( { "starmon_timestamp": 1 }, { expireAfterSeconds: 60 } );
 
+
             ami.on('managerevent', Meteor.bindEnvironment(function(evt) {
                 evt.starmon_timestamp = Date.now();
                 console.log(evt);
                 AmiLog.insert(evt);
             }));
-*/
+
             /*
 TODO:
 Create different collections for each event type or use the AmiLog for everything and then filter events?
