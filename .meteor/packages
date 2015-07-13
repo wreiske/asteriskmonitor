@@ -1,17 +1,24 @@
 # Meteor packages used by this project, one per line.
+# Check this file (and the other files in this directory) into your repository.
 #
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-standard-app-packages
-preserve-inputs
-jquery
-bootstrap-3
-fast-render
-npm
-moment
-accounts-password
-accounts-ui-bootstrap-3
-router
-crypto-md5
+meteor-platform
+autopublish
 insecure
+meteorhacks:fast-render
+meteorhacks:npm
+mrt:momentjs
+mizzao:timesync
+iron:router
+mizzao:user-status
+jquery
+
+
+npm-container
+twbs:bootstrap
+accounts-google
+useraccounts:bootstrap
+accounts-password
+jparker:crypto-md5
