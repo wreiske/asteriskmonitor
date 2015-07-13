@@ -44,6 +44,14 @@ Meteor.publish("directory", function() {
 });
 
 Meteor.startup(function() {
+    Accounts.loginServiceConfiguration.remove({
+        service: "google"
+    })
+    Accounts.loginServiceConfiguration.insert({
+        service: "google",
+        clientId: "xxxxxx",
+        secret: "xxxxxxx"
+    });
     Meteor.methods({
         save_ami: function(host, port, user, pass) {
             check(host, String);
@@ -176,16 +184,32 @@ Meteor.methods({
         });
     },
 });
-
+Accounts.validateNewUser(function(user) {
+    if (/@example\.com$/.test(user.emails[0].address.toLowerCase())) {
+        return true;
+    } else {
+        throw new Meteor.Error(403, "Only domains from mieweb.com are allowed.");
+    }
+});
 Accounts.onCreateUser(function(options, user) {
     if (Meteor.users.find().count() == 0) {
         user.admin = true;
+    }
+    if (typeof user.services.google !== "undefined") {
+        user.emails = [{
+            address: user.services.google.email
+        }];
+        user.profile = {};
+        user.profile.name = user.services.google.name;
+        user.username = emailUsername(user.services.google.email).toLowerCase();
     }
     console.log(user);
     return user;
 });
 
-
+function emailUsername(emailAddress) {
+   return emailAddress.match(/^(.+)@/)[1];
+}
 var amiStarted = false;
 
 function StartAMI() {

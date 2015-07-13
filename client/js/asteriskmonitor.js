@@ -26,6 +26,10 @@ Handlebars.registerHelper('firstrun', function() {
     }
 });
 
+Handlebars.registerHelper('currentRoute', function() {
+    return Router.current().route.getName();
+});
+
 Template.registerHelper('reactiveTime', function(time) {
     if (typeof time === "undefined") {
         time = this.starmon_timestamp;

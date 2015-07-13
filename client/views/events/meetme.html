@@ -35,7 +35,6 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>User Number</th>
                             <th>Caller ID Name</th>
                             <th>Caller ID Number</th>
                             <th>Timestamp</th>
@@ -46,12 +45,11 @@
                     <tbody>
                         {{#each bridge}}
                         <tr data-toggle="bridge_{{this._id}}">
-                            <td>{{this.usernum}}</td>
                             <td>{{this.calleridname}}</td>
                             <td>{{this.calleridnum}}</td>
                             <td>{{reactiveTime}}</td>
                             <td>
-                                <font size="3px">{{this.meetme}}</font>
+                                {{this.meetme}}
                             </td>
                             <td><a onmousedown="Template.meetme.meetme_kick_user({{this.meetme}}, {{this.usernum}});">[Kick]</a> - <a onmousedown="Template.meetme.meetme_mute_user({{this.meetme}}, {{this.usernum}});">[Mute]</a> - <a onmousedown="$('#bridge_{{this._id}}').modal({show:true});">[Info]</a></td>
                         </tr>
