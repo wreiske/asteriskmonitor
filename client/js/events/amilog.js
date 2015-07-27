@@ -1,4 +1,3 @@
-Meteor.subscribe("AmiLog");
 Template.amilog.helpers({
     event: function() {
         return AmiLog.find({}, {

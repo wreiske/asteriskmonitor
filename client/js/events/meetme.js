@@ -1,4 +1,3 @@
-Meteor.subscribe("MeetMe");
 Template.meetme.helpers({
     bridge: function() {
         return MeetMe.find({
@@ -10,6 +9,45 @@ Template.meetme.helpers({
                 meetme: -1
             }
         });
+    },
+    bridges: function() {
+        var people = MeetMe.find({
+            'meetme': {
+                $exists: true
+            }
+        }, {
+            sort: {
+                meetme: -1
+            }
+        }).fetch();
+        var actualBridges = [];
+
+        $.each(people, function(key, val) {
+            var bridge = {
+                bridge: val.meetme
+            }
+            var loc = -1;
+            $.each(actualBridges, function(key, ee) {
+                if (ee.bridge == val.meetme) {
+                    loc = key;
+                    return false;
+                }
+            });
+            if (loc == -1) {
+                loc = actualBridges.push(bridge) - 1;
+            }
+            var person = {
+                person: val
+            }
+            if (typeof actualBridges[loc].people === "undefined") {
+                actualBridges[loc].people = [];
+                actualBridges[loc].count = 0;
+            }
+
+            actualBridges[loc].people.push(val);
+            actualBridges[loc].count++;
+        });
+        return actualBridges;
     },
     conference: function() {
         return MeetMe.find({
@@ -46,7 +84,6 @@ Template.meetme.meetme_mute_user = function(bridge, user_id) {
                 $("#error").fadeIn();
             } else {
                 $("#error").fadeOut();
-                //console.log(result);
             }
         });
 };
@@ -65,7 +102,6 @@ Template.meetme.meetme_kick_user = function(bridge, user_id) {
                 $("#error").fadeIn();
             } else {
                 $("#error").fadeOut();
-                // console.log(result.message);
             }
         });
 };

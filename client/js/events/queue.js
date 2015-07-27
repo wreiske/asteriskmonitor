@@ -1,4 +1,3 @@
-Meteor.subscribe("Queue");
 Template.queue.helpers({
     caller: function() {
         return Queue.find({

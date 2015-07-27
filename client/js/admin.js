@@ -1,4 +1,3 @@
-Meteor.subscribe("ServerSettings");
 Template.adminstart.helpers({
     ami: function() {
         return ServerSettings.find({
@@ -6,7 +5,6 @@ Template.adminstart.helpers({
         }).fetch()[0];
     }
 });
-
 
 Template.adminstart.events = {
     'submit form': function(e) {

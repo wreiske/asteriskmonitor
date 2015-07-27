@@ -34,12 +34,14 @@ Template.registerHelper('reactiveTime', function(time) {
     if (typeof time === "undefined") {
         time = this.starmon_timestamp;
     }
-
     return moment(time).from(TimeSync.serverTime());
 });
 
 Handlebars.registerHelper('moment', function(time) {
-    return moment(time).fromNow();
+    if (typeof time === "undefined") {
+        time = this.starmon_timestamp;
+    }
+    return moment(time).from(TimeSync.serverTime());
 });
 
 Handlebars.registerHelper('isadmin', function() {

@@ -23,9 +23,6 @@
                     <li {{active "login" currentPage}}>
                         <a href="/">Please Login</a>
                     </li>
-                    <li {{active "about" currentPage}}>
-                        <a href="{{pathFor 'about'}}">About</a>
-                    </li>
                     {{else}}
 
                     <li {{active "home" currentPage}}>
@@ -47,6 +44,9 @@
                                 <a href="/events/queue">Call Queue</a>
                             </li>
                         </ul>
+                    </li>
+                    <li {{active "about" currentPage}}>
+                        <a href="{{pathFor 'about'}}">About</a>
                     </li>
                     {{/if}}
                 </ul>

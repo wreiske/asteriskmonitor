@@ -4,7 +4,8 @@ Handlebars.registerHelper('amiblock', function(context) {
     for (var key in context) {
 
         if (key == "starmon_timestamp") {
-            context[key] = moment(context[key]).format('MMMM Do YYYY, h:mm:ss a');
+            //context[key] = moment(context[key]).format('MMMM Do YYYY, h:mm:ss a');
+            //context[key] = moment(context[key]).from(TimeSync.serverTime());
         }
 
         html = html + '<div class="form-group">';
@@ -31,10 +32,12 @@ Handlebars.registerHelper('amitable', function(context) {
         if (key == "_id") continue;
 
         if (key == "starmon_timestamp") {
-            context[key] = moment(context[key]).format('MMMM Do YYYY, h:mm:ss a');
+             html = html + '<td>' +  moment(context[key]).format('MMMM Do YYYY, h:mm:ss a') + '</td>';
         }
-
-        html = html + '<td>' + context[key] + '</td>';
+        else
+        {
+             html = html + '<td>' + context[key] + '</td>';
+        }       
     }
 
     html = html + '</tr></tbody></table></div>';
