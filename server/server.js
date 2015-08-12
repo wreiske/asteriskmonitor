@@ -232,7 +232,7 @@ function StartAMI() {
                 amiserver.user,
                 amiserver.pass,
                 true); // This parameter determines whether events are emited.
-
+            ami.keepConnected();
             /*
             TODO:
             Create different collections for each event type or use the AmiLog for everything and then filter events?
@@ -245,9 +245,9 @@ function StartAMI() {
             ami.on('managerevent', Meteor.bindEnvironment(function(evt) {
                 evt.starmon_timestamp = Date.now();
                 console.log(evt);
-                AmiLog.update(evt, {
-                    upsert: true
-                });
+                if (evt.event != "MeetmeTalking") {
+                    AmiLog.insert(evt);
+                }
             }));
 
             //
@@ -328,6 +328,48 @@ function StartAMI() {
     }
 }
 /*
+Meteor.setInterval(function() {
+    //Check every 5 seconds if we are still connected to AMI
+
+    var amiserver = ServerSettings.find({
+        'module': 'ami'
+    }).fetch()[0];
+
+    if (amiserver) {
+        if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+            var ami = new asterisk(
+                amiserver.port,
+                amiserver.host,
+                amiserver.user,
+                amiserver.pass,
+                true); // This parameter determines whether events are emited.
+        }
+    } else {
+        return;
+    }
+    if (ami) {
+        ami.action({
+                'action': 'ping'
+            },
+            Meteor.bindEnvironment(function(err, res) {
+                if (err) {
+                    console.log("Can't talk to AMI...is it running? Trying to start AMI....");
+                    StartAMI();
+                    return 'error:' + err;
+                }
+                if (res) {
+                    console.log("Ping result.");
+                    ami.action({
+                        'action': 'logout'
+                    });
+                }
+            }));
+    } else {
+        console.log("Please setup Asterisk AMI settings in admin console.");
+        return 'Invalid server info';
+    }
+}, 10000);
+
 Here's a list of available asterisk commands we might want to implement.
 asterisk*CLI> manager show commands
   Action           Privilege        Synopsis
