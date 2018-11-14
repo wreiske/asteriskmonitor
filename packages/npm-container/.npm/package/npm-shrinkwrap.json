@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "asterisk-manager": {
-      "version": "0.1.15"
-    }
-  }
-}

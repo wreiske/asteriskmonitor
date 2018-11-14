@@ -1,6 +1,4 @@
-Meteor.subscribe("AmiStatus");
-
-Handlebars.registerHelper('notloggedin', function() {
+Handlebars.registerHelper('notloggedin', function () {
     if (Meteor.user()) {
         return false;
     } else {
@@ -8,60 +6,59 @@ Handlebars.registerHelper('notloggedin', function() {
     }
 });
 
-Handlebars.registerHelper('ami_connected', function() {
+Meteor.subscribe('AmiStatus');
+Handlebars.registerHelper('ami_connected', function () {
     if (AmiStatus.find({
             'status': 'Fully Booted'
-        }).count() == 1) {
+        }).count() === 1) {
         return true;
     } else {
         return false;
     }
 });
 
-Handlebars.registerHelper('firstrun', function() {
-    if (Meteor.users.find().count() != 0) {
-        return false;
-    } else {
-        return true;
-    }
+Handlebars.registerHelper('firstrun', function () {
+    return ((Counts.get("user-count") === 0) ? true : false);
 });
 
-Handlebars.registerHelper('currentRoute', function() {
+Handlebars.registerHelper('currentRoute', function () {
     return Router.current().route.getName();
 });
 
-Template.registerHelper('reactiveTime', function(time) {
+Template.registerHelper('reactiveTime', function (time) {
     if (typeof time === "undefined") {
         time = this.starmon_timestamp;
     }
     return moment(time).from(TimeSync.serverTime());
 });
 
-Handlebars.registerHelper('moment', function(time) {
+Handlebars.registerHelper('moment', function (time) {
     if (typeof time === "undefined") {
         time = this.starmon_timestamp;
     }
     return moment(time).from(TimeSync.serverTime());
 });
 
-Handlebars.registerHelper('isadmin', function() {
-    if (Meteor.user().admin) {
+Handlebars.registerHelper('isadmin', function () {
+    if (Meteor.user().profile.admin) {
         try {
-            if (Meteor.user().admin == 1) {
+            if (Meteor.user().profile.admin == 1) {
                 return true;
             } else {
                 return false;
             }
-        } catch (err) {}
+        } catch (err) {
+            return false;
+        }
     }
 });
 
-Handlebars.registerHelper('inbox_count', function() {
+Handlebars.registerHelper('inbox_count', function () {
     if (Meteor.userId()) {
         return Messages.find().count();
     }
 });
 
-Handlebars.registerHelper('md5', function(string) {
+Handlebars.registerHelper('md5', function (string) {
     return CryptoJS.MD5(string).toString();
 });

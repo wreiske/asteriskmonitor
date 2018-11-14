@@ -1,7 +1,5 @@
 Template.header.helpers({
-    active: function(page, currentpage) {
-        //console.log('page:'+ page);
-        //console.log('currentpage:'+ currentpage);
+    active: function (page, currentpage) {
         if (page == currentpage) {
             return ' class=active ';
         }

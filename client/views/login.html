@@ -1,15 +1,18 @@
 <template name="login">
     <div class="jumbotron">
         <div class="container">
-            <h1>Welcome to your <span class="glyphicon glyphicon-asterisk"></span>monitor Administration Panel!</h1>
+            <h1>Welcome to your <span class="fa fa-asterisk"></span>monitor Administration Panel!</h1>
             <p>To get started you need to first login.</p>
         </div>
     </div>
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-            
-                {{>atForm}}
+                {{#if setupComplete}}
+                    {{>atForm}}
+                {{else}}
+                    <p>You need to <a href="{{pathFor 'setup'}}">setup</a> <span class="fa fa-asterisk"></span>monitor before you can continue.</p>
+                {{/if}}
             </div>
         </div>
     </div>

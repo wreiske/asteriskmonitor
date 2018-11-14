@@ -1,8 +1,8 @@
-var asterisk = new Meteor.npmRequire('asterisk-manager');
+const asterisk = require('asterisk-manager');
 
 /* TODO: Remove ability for users to change profile.admin */
 Meteor.users.allow({
-    update: function(userId, user, fields, modifier) {
+    update: function (userId, user, fields, modifier) {
         if (user._id === userId) {
             Meteor.users.update({
                 _id: userId
@@ -12,7 +12,7 @@ Meteor.users.allow({
     }
 });
 
-Meteor.publish("directory", function() {
+Meteor.publish("directory", function () {
     return Meteor.users.find({}, {
         fields: {
             emails: 1,
@@ -22,29 +22,33 @@ Meteor.publish("directory", function() {
     });
 });
 
-Meteor.startup(function() {
-    Meteor.publish("AmiLog", function() {
+Meteor.publish("UserCount", function () {
+    Counts.publish(this, 'user-count', Meteor.users.find());
+});
+
+Meteor.startup(function () {
+    Meteor.publish("AmiLog", function () {
         return AmiLog.find({}, {
-            limit: 25,
+            limit: 50,
             sort: {
                 starmon_timestamp: -1
             }
         });
     });
 
-    Meteor.publish("ServerSettings", function() {
+    Meteor.publish("ServerSettings", function () {
         return ServerSettings.find();
     });
 
-    Meteor.publish("MeetMe", function() {
-        return MeetMe.find();
+    Meteor.publish("Conferences", function () {
+        return Conferences.find();
     });
 
-    Meteor.publish("AmiStatus", function() {
+    Meteor.publish("AmiStatus", function () {
         return AmiStatus.find();
     });
 
-    Meteor.publish("Queue", function() {
+    Meteor.publish("Queue", function () {
         return Queue.find();
     });
 
@@ -57,7 +61,7 @@ Meteor.startup(function() {
         secret: GlobalSettings.Google.secret
     });
     Meteor.methods({
-        save_ami: function(host, port, user, pass) {
+        save_ami: function (host, port, user, pass) {
             check(host, String);
             check(port, String);
             check(user, String);
@@ -77,7 +81,7 @@ Meteor.startup(function() {
                 ami.action({
                         'action': 'ping'
                     },
-                    Meteor.bindEnvironment(function(err, res) {
+                    Meteor.bindEnvironment(function (err, res) {
                         if (err) {
                             console.log("Ping error.");
                             return 'error:' + err;
@@ -117,11 +121,11 @@ Meteor.startup(function() {
                 return 'Invalid server info';
             }
         },
-        StartAMI: function() {
+        StartAMI: function () {
             // .. do other stuff ..
             return "baz";
         },
-        meetme_mute_user: function(bridge, user_id) {
+        meetme_mute_user: function (bridge, user_id) {
             var amiserver = ServerSettings.find({
                 'module': 'ami'
             }).fetch()[0];
@@ -138,7 +142,7 @@ Meteor.startup(function() {
                         'action': 'MeetmeMute',
                         'Meetme': bridge,
                         'Usernum': user_id,
-                    }, function(err, res) {
+                    }, function (err, res) {
                         if (err) {
                             return err;
                         }
@@ -149,7 +153,7 @@ Meteor.startup(function() {
                 return 'Invalid ami info.';
             }
         },
-        meetme_kick_user: function(bridge, user_id) {
+        meetme_kick_user: function (bridge, user_id) {
             var amiserver = ServerSettings.find({
                 'module': 'ami'
             }).fetch()[0];
@@ -165,7 +169,7 @@ Meteor.startup(function() {
                     ami.action({
                         'action': 'Command',
                         'Command': 'meetme kick ' + bridge + ' ' + user_id,
-                    }, function(err, res) {
+                    }, function (err, res) {
                         if (err) {
                             return err;
                         }
@@ -175,6 +179,30 @@ Meteor.startup(function() {
             } else {
                 return 'Invalid ami info.';
             }
+        },
+        registerAdminUser: function (userAdmin) {
+            const usersCount = Meteor.users.find({}).count();
+            if (usersCount >= 1) {
+                throw new Meteor.Error('error-setup-completed', "This system has already been setup with a first time user.");
+                return;
+            }
+            if (!validateEmail(userAdmin.email)) {
+                throw new Meteor.Error("error-setup-invalid-email", userAdmin.email + ' is not a valid email address.');
+            }
+            const userId = Accounts.createUser({
+                email: userAdmin.email,
+                username: userAdmin.username,
+                password: userAdmin.password
+            });
+
+            Meteor.users.update(userId, {
+                $set: {
+                    profile: {
+                        name: userAdmin.profile.name,
+                        admin: 1
+                    }
+                }
+            });
         }
     });
 
@@ -183,23 +211,25 @@ Meteor.startup(function() {
 });
 
 Meteor.methods({
-    "userExists": function(username) {
+    "userExists": function (username) {
         return !!Meteor.users.findOne({
             username: username
         });
     },
 });
-Accounts.validateNewUser(function(user) {
-    var emailAddress = user.emails[0].address.toLowerCase();
-    var idx = emailAddress.lastIndexOf('@');
-    if (idx > -1 && emailAddress.slice(idx) === GlobalSettings.LoginRestrictions.Domain) {
+Accounts.validateNewUser(function (user) {
+    const emailAddress = user.emails[0].address.toLowerCase();
+    console.log(emailAddress);
+    const idx = emailAddress.lastIndexOf('@');
+    console.log(emailAddress.slice(idx));
+    if (idx > -1 && emailAddress.slice(idx) === "@" + GlobalSettings.LoginRestrictions.Domain) {
         return true;
     } else {
         throw new Meteor.Error(403, "Only domains from " + GlobalSettings.LoginRestrictions.Domain + " are allowed.");
     }
 });
 
-Accounts.onCreateUser(function(options, user) {
+Accounts.onCreateUser(function (options, user) {
     if (Meteor.users.find().count() == 0) {
         user.admin = true;
     }
@@ -242,9 +272,9 @@ function StartAMI() {
             */
 
             //AmiLog._ensureIndex( { "starmon_timestamp": 1 }, { expireAfterSeconds: 60 } );
-            ami.on('managerevent', Meteor.bindEnvironment(function(evt) {
+            ami.on('managerevent', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
-                console.log(evt);
+                //console.log(evt);
                 if (evt.event != "MeetmeTalking") {
                     AmiLog.insert(evt);
                 }
@@ -253,13 +283,13 @@ function StartAMI() {
             //
             // Queue Hooks
             //
-            ami.on('join', Meteor.bindEnvironment(function(evt) {
+            ami.on('join', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
                 //console.log(evt);
                 Queue.insert(evt);
             }));
 
-            ami.on('leave', Meteor.bindEnvironment(function(evt) {
+            ami.on('leave', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
                 //console.log(evt);
                 Queue.remove({
@@ -270,20 +300,20 @@ function StartAMI() {
             //
             // Conferencing Hooks
             //
-            ami.on('meetmejoin', Meteor.bindEnvironment(function(evt) {
+            ami.on('meetmejoin', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
                 //console.log(evt);
-                MeetMe.insert(evt);
+                Conferences.insert(evt);
             }));
 
-            ami.on('meetmetalking', Meteor.bindEnvironment(function(evt) {
+            ami.on('meetmetalking', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
                 //console.log(evt);
                 var talking = false;
                 if (evt.status == "on") {
                     talking = true;
                 }
-                MeetMe.update({
+                Conferences.update({
                     uniqueid: evt.uniqueid
                 }, {
                     $set: {
@@ -292,18 +322,18 @@ function StartAMI() {
                 });
             }));
 
-            ami.on('meetmeleave', Meteor.bindEnvironment(function(evt) {
+            ami.on('meetmeleave', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
                 // console.log(evt);
-                MeetMe.remove({
+                Conferences.remove({
                     uniqueid: evt.uniqueid
                 });
             }));
 
-            ami.on('meetmeend', Meteor.bindEnvironment(function(evt) {
+            ami.on('meetmeend', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
                 // console.log(evt);
-                MeetMe.remove({
+                Conferences.remove({
                     meetme: evt.meetme
                 });
             }));
@@ -312,9 +342,9 @@ function StartAMI() {
             // AMI Connection status
             // TODO: Detect when AMI goes away
             //
-            ami.on('fullybooted', Meteor.bindEnvironment(function(evt) {
+            ami.on('fullybooted', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
-                console.log(evt);
+                //console.log(evt);
 
                 if (AmiStatus.find().count() > 0) {
                     AmiStatus.update({}, evt);

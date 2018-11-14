@@ -1,6 +1,6 @@
-Template.meetme.helpers({
+Template.conferences.helpers({
     bridge: function() {
-        return MeetMe.find({
+        return Conferences.find({
             'meetme': {
                 $exists: true
             }
@@ -11,7 +11,7 @@ Template.meetme.helpers({
         });
     },
     bridges: function() {
-        var people = MeetMe.find({
+        var people = Conferences.find({
             'meetme': {
                 $exists: true
             }
@@ -50,7 +50,7 @@ Template.meetme.helpers({
         return actualBridges;
     },
     conference: function() {
-        return MeetMe.find({
+        return Conferences.find({
             'meetme': {
                 $exists: true
             }
@@ -61,7 +61,7 @@ Template.meetme.helpers({
         });
     },
     bridge_count: function() {
-        return MeetMe.find({
+        return Conferences.find({
             'meetme': {
                 $exists: true
             }
@@ -69,7 +69,7 @@ Template.meetme.helpers({
     }
 });
 
-Template.meetme.meetme_mute_user = function(bridge, user_id) {
+Template.conferences.meetme_mute_user = function(bridge, user_id) {
     var error_box = $("#errors");
     Meteor.call('meetme_mute_user',
         bridge,
@@ -87,7 +87,7 @@ Template.meetme.meetme_mute_user = function(bridge, user_id) {
             }
         });
 };
-Template.meetme.meetme_kick_user = function(bridge, user_id) {
+Template.conferences.meetme_kick_user = function(bridge, user_id) {
     var error_box = $("#errors");
     Meteor.call('meetme_kick_user',
         bridge,

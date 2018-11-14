@@ -1,5 +1,5 @@
 Template.editprofile.events = {
-    'submit form': function(e) {
+    'submit form': function (e) {
         e.preventDefault();
         Meteor.users.update({
             _id: Meteor.user()._id
@@ -10,5 +10,4 @@ Template.editprofile.events = {
             }
         });
     },
-
 };

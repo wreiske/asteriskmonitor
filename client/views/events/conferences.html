@@ -1,4 +1,4 @@
-<template name="meetme">
+<template name="conferences">
     <div style="display:none;" id="error" class="panel panel-danger">
         <div class="panel-heading">
             <h3 class="panel-title">Error!</h3>
@@ -8,7 +8,7 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">All MeetMe's
+            <h3 class="panel-title">All Conferences
                 <span class="badge">{{bridge_count}}</span>
             </h3>
         </div>
@@ -59,7 +59,7 @@
                             <td>
                                 {{this.meetme}}
                             </td>
-                            <td><a onmousedown="Template.meetme.meetme_kick_user({{this.meetme}}, {{this.usernum}});">[Kick]</a> - <a onmousedown="Template.meetme.meetme_mute_user({{this.meetme}}, {{this.usernum}});">[Mute]</a> - <a onmousedown="$('#bridge_{{this._id}}').modal({show:true});">[Info]</a></td>
+                            <td><a onmousedown="Template.conferences.meetme_kick_user({{this.meetme}}, {{this.usernum}});">[Kick]</a> - <a onmousedown="Template.conferences.meetme_mute_user({{this.meetme}}, {{this.usernum}});">[Mute]</a> - <a onmousedown="$('#bridge_{{this._id}}').modal({show:true});">[Info]</a></td>
                         </tr>
                         {{/each}}
                     </tbody>
@@ -119,7 +119,7 @@
                             <td>{{this.calleridname}}</td>
                             <td>{{this.calleridnum}}</td>
                             <td>{{reactiveTime this.starmon_timestamp}}</td>
-                            <td><a onmousedown="Template.meetme.meetme_kick_user({{this.meetme}}, {{this.usernum}});">[Kick]</a> - <a onmousedown="Template.meetme.meetme_mute_user({{this.meetme}}, {{this.usernum}});">[Mute]</a> - <a onmousedown="$('#bridge_{{this._id}}').modal({show:true});">[Info]</a></td>
+                            <td><a onmousedown="Template.conferences.meetme_kick_user({{this.meetme}}, {{this.usernum}});">[Kick]</a> - <a onmousedown="Template.conferences.meetme_mute_user({{this.meetme}}, {{this.usernum}});">[Mute]</a> - <a onmousedown="$('#bridge_{{this._id}}').modal({show:true});">[Info]</a></td>
                         </tr>
                         {{/each}}
                     </tbody>

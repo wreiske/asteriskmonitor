@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-asterisk"></span>monitor :: {{currentRoute}}</a>
+                <a class="navbar-brand" href="/"><span class="fa fa-asterisk"></span>monitor :: {{currentRoute}}</a>
             </div>
             <div class="navbar-collapse collapse">
                 {{#if firstrun}}
@@ -32,16 +32,16 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Events <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li {{active "calls" currentPage}}>
-                                <a href="/events/calls">Calls</a>
+                                <a href="{{pathFor 'calls'}}">Calls</a>
                             </li>
-                            <li {{active "meetme" currentPage}}>
-                                <a href="/events/meetme">MeetMe</a>
+                            <li {{active "conferences" currentPage}}>
+                                <a href="{{pathFor 'conferences'}}">Conferences</a>
                             </li>
                             <li {{active "amilog" currentPage}}>
-                                <a href="/events/amilog">All Events</a>
+                                <a href="{{pathFor 'amilog'}}">All Events</a>
                             </li>     
                             <li {{active "queue" currentPage}}>
-                                <a href="/events/queue">Call Queue</a>
+                                <a href="{{pathFor 'queue'}}">Call Queue</a>
                             </li>
                         </ul>
                     </li>
