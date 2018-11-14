@@ -219,9 +219,7 @@ Meteor.methods({
 });
 Accounts.validateNewUser(function (user) {
     const emailAddress = user.emails[0].address.toLowerCase();
-    console.log(emailAddress);
     const idx = emailAddress.lastIndexOf('@');
-    console.log(emailAddress.slice(idx));
     if (idx > -1 && emailAddress.slice(idx) === "@" + GlobalSettings.LoginRestrictions.Domain) {
         return true;
     } else {
