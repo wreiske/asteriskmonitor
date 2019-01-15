@@ -11,8 +11,21 @@ Meteor.users.allow({
         } else return false;
     }
 });
+Meteor.publish('userInfo', function () {
+    if (this.userId) {
+        return Meteor.users.find(this.userId, {
+            fields: {
+                emails: 1,
+                profile: 1,
+                admin: 1
+            }
+        });
+    } else {
+        this.ready();
+    }
+});
 
-Meteor.publish("directory", function () {
+Meteor.publish('directory', function () {
     return Meteor.users.find({}, {
         fields: {
             emails: 1,
@@ -22,12 +35,12 @@ Meteor.publish("directory", function () {
     });
 });
 
-Meteor.publish("UserCount", function () {
+Meteor.publish('UserCount', function () {
     Counts.publish(this, 'user-count', Meteor.users.find());
 });
 
 Meteor.startup(function () {
-    Meteor.publish("AmiLog", function () {
+    Meteor.publish('AmiLog', function () {
         return AmiLog.find({}, {
             limit: 50,
             sort: {
@@ -36,27 +49,45 @@ Meteor.startup(function () {
         });
     });
 
-    Meteor.publish("ServerSettings", function () {
+    Meteor.publish('ServerSettings', function () {
         return ServerSettings.find();
     });
 
-    Meteor.publish("Conferences", function () {
+    Meteor.publish('Conferences', function () {
         return Conferences.find();
     });
 
-    Meteor.publish("AmiStatus", function () {
+    Meteor.publish('ConferenceSingle', function (id) {
+        return Conferences.find({
+            'bridgeuniqueid': id
+        });
+    });
+
+    Meteor.publish('ConferenceEvents', function (id) {
+        return ConferenceEvents.find({
+            'bridgeuniqueid': id
+        });
+    });
+    
+    Meteor.publish('ConferenceMembers', function (id) {
+        return ConferenceMembers.find({
+            'bridgeuniqueid': id
+        });
+    });
+
+    Meteor.publish('AmiStatus', function () {
         return AmiStatus.find();
     });
 
-    Meteor.publish("Queue", function () {
+    Meteor.publish('Queue', function () {
         return Queue.find();
     });
 
     Accounts.loginServiceConfiguration.remove({
-        service: "google"
+        service: 'google'
     })
     Accounts.loginServiceConfiguration.insert({
-        service: "google",
+        service: 'google',
         clientId: GlobalSettings.Google.clientId,
         secret: GlobalSettings.Google.secret
     });
@@ -67,27 +98,30 @@ Meteor.startup(function () {
             check(user, String);
             check(pass, String);
 
-
-            var ami = new asterisk(
+            const ami = new asterisk(
                 port,
                 host,
                 user,
                 pass,
-                true); // This parameter determines whether events are emited.
+                true); // This parameter determines whether events are emitted.
 
             console.log(ami);
             if (ami) {
+                debugger;
                 ami.keepConnected();
+                ami.on('error', function (err) {
+                    console.log('ERROR', err);
+                });
                 ami.action({
                         'action': 'ping'
                     },
-                    Meteor.bindEnvironment(function (err, res) {
+                    Meteor.bindEnvironment((err, res) => {
                         if (err) {
-                            console.log("Ping error.");
-                            return 'error:' + err;
+                            console.log('Ping error: ', err);
+                            throw new Meteor.Error('ami-ping-error', err);
                         }
                         if (res) {
-                            console.log("Ping result.");
+                            console.log('Ping result.');
 
                             if (ServerSettings.find({
                                     'module': 'ami'
@@ -100,7 +134,7 @@ Meteor.startup(function () {
                                     'user': user,
                                     'pass': pass
                                 });
-                                console.log("Inserted AMI Server settings...");
+                                console.log('Inserted AMI Server settings...');
                             } else {
                                 ServerSettings.update({
                                     'module': 'ami'
@@ -112,18 +146,18 @@ Meteor.startup(function () {
                                         'pass': pass
                                     }
                                 });
-                                console.log("Updated AMI Server settings...");
+                                console.log('Updated AMI Server settings...');
                             }
                             StartAMI();
                         }
                     }));
             } else {
-                return 'Invalid server info';
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
             }
         },
         StartAMI: function () {
             // .. do other stuff ..
-            return "baz";
+            return 'baz';
         },
         meetme_mute_user: function (bridge, user_id) {
             var amiserver = ServerSettings.find({
@@ -150,7 +184,7 @@ Meteor.startup(function () {
                     });
                 }
             } else {
-                return 'Invalid ami info.';
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
             }
         },
         meetme_kick_user: function (bridge, user_id) {
@@ -177,17 +211,77 @@ Meteor.startup(function () {
                     });
                 }
             } else {
-                return 'Invalid ami info.';
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
+            }
+        },
+        // TODO: Make generic...
+        conference_mute_user: function (bridge, channel) {
+            check(bridge, Number);
+            check(channel, String);
+
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'confbridgemute',
+                        'conference': bridge,
+                        'channel': channel,
+                    }, Meteor.bindEnvironment(function (err, res) {
+                        if (err) {
+                            throw new Meteor.Error('conf-mute-error', err);
+                        }
+                        return res;
+                    }));
+                }
+            } else {
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
+            }
+        },
+        conference_kick_user: function (bridge, channel) {
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'confbridgekick',
+                        'conference': bridge,
+                        'channel': channel,
+                    }, Meteor.bindEnvironment(function (err, res) {
+                        if (err) {
+                            throw new Meteor.Error('conf-kick-error', err);
+                        }
+                        return res;
+                    }));
+                }
+            } else {
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
             }
         },
         registerAdminUser: function (userAdmin) {
             const usersCount = Meteor.users.find({}).count();
             if (usersCount >= 1) {
-                throw new Meteor.Error('error-setup-completed', "This system has already been setup with a first time user.");
+                throw new Meteor.Error('error-setup-completed', 'This system has already been setup with a first time user.');
                 return;
             }
             if (!validateEmail(userAdmin.email)) {
-                throw new Meteor.Error("error-setup-invalid-email", userAdmin.email + ' is not a valid email address.');
+                throw new Meteor.Error('error-setup-invalid-email', userAdmin.email + ' is not a valid email address.');
             }
             const userId = Accounts.createUser({
                 email: userAdmin.email,
@@ -199,8 +293,8 @@ Meteor.startup(function () {
                 $set: {
                     profile: {
                         name: userAdmin.profile.name,
-                        admin: 1
-                    }
+                    },
+                    admin: 1
                 }
             });
         }
@@ -211,19 +305,20 @@ Meteor.startup(function () {
 });
 
 Meteor.methods({
-    "userExists": function (username) {
+    'userExists': function (username) {
         return !!Meteor.users.findOne({
             username: username
         });
     },
 });
+
 Accounts.validateNewUser(function (user) {
     const emailAddress = user.emails[0].address.toLowerCase();
     const idx = emailAddress.lastIndexOf('@');
-    if (idx > -1 && emailAddress.slice(idx) === "@" + GlobalSettings.LoginRestrictions.Domain) {
+    if (idx > -1 && emailAddress.slice(idx) === '@' + GlobalSettings.LoginRestrictions.Domain) {
         return true;
     } else {
-        throw new Meteor.Error(403, "Only domains from " + GlobalSettings.LoginRestrictions.Domain + " are allowed.");
+        throw new Meteor.Error(403, 'Only domains from ' + GlobalSettings.LoginRestrictions.Domain + ' are allowed.');
     }
 });
 
@@ -231,7 +326,7 @@ Accounts.onCreateUser(function (options, user) {
     if (Meteor.users.find().count() == 0) {
         user.admin = true;
     }
-    if (typeof user.services.google !== "undefined") {
+    if (typeof user.services.google !== 'undefined') {
         user.emails = [{
             address: user.services.google.email
         }];
@@ -245,16 +340,16 @@ Accounts.onCreateUser(function (options, user) {
 function emailUsername(emailAddress) {
     return emailAddress.match(/^(.+)@/)[1];
 }
-var amiStarted = false;
+let amiStarted = false;
 
 function StartAMI() {
-    var amiserver = ServerSettings.find({
+    const amiserver = ServerSettings.find({
         'module': 'ami'
     }).fetch()[0];
 
     if (amiserver) {
         if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
-            var ami = new asterisk(
+            const ami = new asterisk(
                 amiserver.port,
                 amiserver.host,
                 amiserver.user,
@@ -269,11 +364,13 @@ function StartAMI() {
             https://wiki.asterisk.org/wiki/display/AST/Asterisk+11+AMI+Events
             */
 
-            //AmiLog._ensureIndex( { "starmon_timestamp": 1 }, { expireAfterSeconds: 60 } );
+            //AmiLog._ensureIndex( { 'starmon_timestamp': 1 }, { expireAfterSeconds: 60 } );
             ami.on('managerevent', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
                 //console.log(evt);
-                if (evt.event != "MeetmeTalking") {
+                if (evt.event == 'MeetmeTalking' || evt.event == 'ConfbridgeTalking' || evt.event == 'RTCPSent' || evt.event == 'RTCPReceived' || evt.event == 'VarSet') {
+                    return
+                } else {
                     AmiLog.insert(evt);
                 }
             }));
@@ -295,6 +392,55 @@ function StartAMI() {
                 });
             }));
 
+
+            ami.on('confbridgejoin', Meteor.bindEnvironment(function (evt) {
+                evt.starmon_timestamp = Date.now();
+                console.log(evt);
+                ConferenceMembers.insert(evt);
+            }));
+
+            ami.on('confbridgetalking', Meteor.bindEnvironment(function (evt) {
+                evt.starmon_timestamp = Date.now();
+                console.log(evt);
+                let talking = false;
+                if (evt.talkingstatus == 'on') {
+                    talking = true;
+                }
+                ConferenceMembers.update({
+                    uniqueid: evt.uniqueid
+                }, {
+                    $set: {
+                        talking: talking
+                    }
+                });
+            }));
+
+            ami.on('confbridgeleave', Meteor.bindEnvironment(function (evt) {
+                evt.starmon_timestamp = Date.now();
+                console.log(evt);
+                ConferenceMembers.remove({
+                    uniqueid: evt.uniqueid
+                });
+            }));
+
+            ami.on('confbridgeend', Meteor.bindEnvironment(function (evt) {
+                evt.starmon_timestamp = Date.now();
+                console.log(evt);
+                Conferences.update({
+                    'bridgeuniqueid': evt.bridgeuniqueid
+                }, {
+                    $set: {
+                        end_timestamp: new Date()
+                    }
+                });
+            }));
+
+            ami.on('confbridgestart', Meteor.bindEnvironment(function (evt) {
+                evt.starmon_timestamp = Date.now();
+                console.log(evt);
+                Conferences.insert(evt);
+            }));
+
             //
             // Conferencing Hooks
             //
@@ -308,7 +454,7 @@ function StartAMI() {
                 evt.starmon_timestamp = Date.now();
                 //console.log(evt);
                 var talking = false;
-                if (evt.status == "on") {
+                if (evt.status == 'on') {
                     talking = true;
                 }
                 Conferences.update({
@@ -352,7 +498,7 @@ function StartAMI() {
             }));
         }
     } else {
-        console.log("AMI is not yet configured && is not listening for events. Please login to the Administration Panel from the web interface and setup your asterisk server.");
+        console.log('AMI is not yet configured && is not listening for events. Please login to the Administration Panel from the web interface and setup your asterisk server.');
     }
 }
 /*
@@ -381,19 +527,19 @@ Meteor.setInterval(function() {
             },
             Meteor.bindEnvironment(function(err, res) {
                 if (err) {
-                    console.log("Can't talk to AMI...is it running? Trying to start AMI....");
+                    console.log('Can't talk to AMI...is it running? Trying to start AMI....');
                     StartAMI();
                     return 'error:' + err;
                 }
                 if (res) {
-                    console.log("Ping result.");
+                    console.log('Ping result.');
                     ami.action({
                         'action': 'logout'
                     });
                 }
             }));
     } else {
-        console.log("Please setup Asterisk AMI settings in admin console.");
+        console.log('Please setup Asterisk AMI settings in admin console.');
         return 'Invalid server info';
     }
 }, 10000);

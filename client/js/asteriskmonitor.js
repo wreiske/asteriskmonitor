@@ -32,6 +32,10 @@ Template.registerHelper('reactiveTime', function (time) {
     return moment(time).from(TimeSync.serverTime());
 });
 
+Template.registerHelper('elapsedTime', function (time, time2) {
+    return moment(time).from(time2, true);
+});
+
 Handlebars.registerHelper('moment', function (time) {
     if (typeof time === "undefined") {
         time = this.starmon_timestamp;
@@ -40,9 +44,9 @@ Handlebars.registerHelper('moment', function (time) {
 });
 
 Handlebars.registerHelper('isadmin', function () {
-    if (Meteor.user().profile.admin) {
+    if (Meteor.user() && Meteor.user().admin) {
         try {
-            if (Meteor.user().profile.admin == 1) {
+            if (Meteor.user().admin == 1) {
                 return true;
             } else {
                 return false;

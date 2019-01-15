@@ -1,5 +1,5 @@
 Template.adminstart.helpers({
-    ami: function() {
+    ami: function () {
         return ServerSettings.find({
             'module': 'ami'
         }).fetch()[0];
@@ -7,15 +7,15 @@ Template.adminstart.helpers({
 });
 
 Template.adminstart.events = {
-    'submit form': function(e) {
+    'submit form': function (e) {
         e.preventDefault();
 
-        var valid = true;
-        var error_box = $("#errors");
-        var host = $(e.target).find('[name=ami_host]').val();
-        var port = $(e.target).find('[name=ami_port]').val();
-        var user = $(e.target).find('[name=ami_user]').val();
-        var pass = $(e.target).find('[name=ami_pass]').val();
+        let valid = true;
+        const error_box = $("#errors");
+        const host = $(e.target).find('[name=ami_host]').val();
+        const port = $(e.target).find('[name=ami_port]').val();
+        const user = $(e.target).find('[name=ami_user]').val();
+        const pass = $(e.target).find('[name=ami_pass]').val();
 
         error_box.html("");
 
@@ -41,17 +41,16 @@ Template.adminstart.events = {
                 port,
                 user,
                 pass,
-                function(error, result) {
-                    //console.log(error);
-                    //console.log(result);
-
+                function (error, result) {
                     if (error) {
                         error_box.append('<p>Error saving server settings:</p>');
                         error_box.append('<p>' + error + '</p>');
+                        toastr.error(error, 'Error!');
                         $("#error").fadeIn();
                     } else {
                         $("#error").fadeOut();
                         console.log(result);
+                        toastr.success(result, 'Saved!');
                     }
                 });
             return false;
