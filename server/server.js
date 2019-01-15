@@ -26,61 +26,101 @@ Meteor.publish('userInfo', function () {
 });
 
 Meteor.publish('directory', function () {
-    return Meteor.users.find({}, {
-        fields: {
-            emails: 1,
-            profile: 1,
-            admin: 1
-        }
-    });
+    if (this.userId) {
+        return Meteor.users.find({}, {
+            fields: {
+                emails: 1,
+                profile: 1,
+                admin: 1
+            }
+        });
+    } else {
+        this.ready();
+    }
 });
 
 Meteor.publish('UserCount', function () {
-    Counts.publish(this, 'user-count', Meteor.users.find());
+    if (this.userId) {
+        Counts.publish(this, 'user-count', Meteor.users.find());
+    } else {
+        this.ready();
+    }
 });
 
 Meteor.startup(function () {
     Meteor.publish('AmiLog', function () {
-        return AmiLog.find({}, {
-            limit: 50,
-            sort: {
-                starmon_timestamp: -1
-            }
-        });
+        if (this.userId) {
+            return AmiLog.find({}, {
+                limit: 50,
+                sort: {
+                    starmon_timestamp: -1
+                }
+            });
+        } else {
+            this.ready();
+        }
     });
 
     Meteor.publish('ServerSettings', function () {
-        return ServerSettings.find();
+        if (this.userId) {
+            return ServerSettings.find();
+        } else {
+            this.ready();
+        }
     });
 
     Meteor.publish('Conferences', function () {
-        return Conferences.find();
+        if (this.userId) {
+            return Conferences.find();
+        } else {
+            this.ready();
+        }
     });
 
     Meteor.publish('ConferenceSingle', function (id) {
-        return Conferences.find({
-            'bridgeuniqueid': id
-        });
+        if (this.userId) {
+            return Conferences.find({
+                'bridgeuniqueid': id
+            });
+        } else {
+            this.ready();
+        }
     });
 
     Meteor.publish('ConferenceEvents', function (id) {
-        return ConferenceEvents.find({
-            'bridgeuniqueid': id
-        });
+        if (this.userId) {
+            return ConferenceEvents.find({
+                'bridgeuniqueid': id
+            });
+        } else {
+            this.ready();
+        }
     });
-    
+
     Meteor.publish('ConferenceMembers', function (id) {
-        return ConferenceMembers.find({
-            'bridgeuniqueid': id
-        });
+        if (this.userId) {
+            return ConferenceMembers.find({
+                'bridgeuniqueid': id
+            });
+        } else {
+            this.ready();
+        }
     });
 
     Meteor.publish('AmiStatus', function () {
-        return AmiStatus.find();
+        if (this.userId) {
+            return AmiStatus.find();
+        } else {
+            this.ready();
+        }
     });
 
     Meteor.publish('Queue', function () {
-        return Queue.find();
+        if (this.userId) {
+            return Queue.find();
+        } else {
+            this.ready();
+        }
     });
 
     Accounts.loginServiceConfiguration.remove({
