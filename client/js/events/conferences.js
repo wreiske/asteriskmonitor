@@ -6,7 +6,7 @@ Template.conferences.helpers({
             }
         }, {
             sort: {
-                conference: -1
+                starmon_timestamp: -1
             }
         });
     },
@@ -24,7 +24,7 @@ Template.conferences.helpers({
             }
         }, {
             sort: {
-                conference: -1
+                end_timestamp: -1
             }
         });
     },
