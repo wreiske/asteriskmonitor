@@ -30,10 +30,10 @@ Template.ConferenceSingle.helpers({
       }
     });
   },
-  total_bridge_count: function () {
+  total_member_count: function () {
     return ConferenceMembers.find().count();
   },
-  active_bridge_count: function () {
+  active_member_count: function () {
     return ConferenceMembers.find({
       'leave_timestamp': {
         $exists: false
@@ -51,7 +51,7 @@ Template.ConferenceSingle.helpers({
       }
     });
   },
-  hangup_bridge_count: function () {
+  hangup_member_count: function () {
     return ConferenceMembers.find({
       'leave_timestamp': {
         $exists: true
@@ -59,48 +59,87 @@ Template.ConferenceSingle.helpers({
     }).count();
   }
 });
+
 Template.ConferenceSingle.events({
   'click #permalink': function (event) {
     copyToClipboard(event.target.value);
     toastr.success('Copied conference link to clipboard');
+  },
+  'click .conf-kick-member': function (event) {
+    var error_box = $('#errors');
+    if (event.currentTarget.parentElement.dataset.meetme == "") {
+      // confbridge
+      Meteor.call('conference_kick_user',
+        this.bridgeuniqueid,
+        event.currentTarget.parentElement.dataset.conference,
+        event.currentTarget.parentElement.dataset.channel,
+        function (error, result) {
+          if (error) {
+            toastr.error(error, 'Error kicking user');
+            error_box.append('<p>Error kicking user:</p>');
+            error_box.append('<p>' + error + '</p>');
+            $('#error').fadeIn();
+          } else {
+            toastr.success('Kicked user from conference.');
+            $('#error').fadeOut();
+          }
+        });
+    } else {
+      // Meet ME
+      Meteor.call('meetme_kick_user',
+        this.bridgeuniqueid,
+        event.currentTarget.parentElement.dataset.meetme,
+        event.currentTarget.parentElement.dataset.usernum,
+        function (error, result) {
+          if (error) {
+            toastr.error(error, 'Error kicking user');
+            error_box.append('<p>Error kicking user:</p>');
+            error_box.append('<p>' + error + '</p>');
+            $('#error').fadeIn();
+          } else {
+            toastr.success('Kicked user from conference.');
+            $('#error').fadeOut();
+          }
+        });
+    }
+  },
+  'click .conf-mute-member': function (event) {
+    var error_box = $('#errors');
+    if (event.currentTarget.parentElement.dataset.meetme == "") {
+      // confbridge
+
+      Meteor.call('conference_mute_user',
+        this.bridgeuniqueid,
+        event.currentTarget.parentElement.dataset.conference,
+        event.currentTarget.parentElement.dataset.channel,
+        function (error, result) {
+          if (error) {
+            toastr.error(error, 'Error muting user');
+            error_box.append('<p>Error muting user:</p>');
+            error_box.append('<p>' + error + '</p>');
+            $('#error').fadeIn();
+          } else {
+            toastr.success('Muted!');
+            $('#error').fadeOut();
+          }
+        });
+    } else {
+      // Meet ME
+      Meteor.call('meetme_mute_user',
+        this.bridgeuniqueid,
+        event.currentTarget.parentElement.dataset.meetme,
+        event.currentTarget.parentElement.dataset.usernum,
+        function (error, result) {
+          if (error) {
+            toastr.error(error, 'Error muting user');
+            error_box.append('<p>Error muting user:</p>');
+            error_box.append('<p>' + error + '</p>');
+            $('#error').fadeIn();
+          } else {
+            toastr.success('Muted!');
+            $('#error').fadeOut();
+          }
+        });
+    }
   }
 });
-Template.ConferenceSingle.conference_mute_user = function (bridge, channel) {
-  var error_box = $('#errors');
-  Meteor.call('conference_mute_user',
-    bridge,
-    channel,
-    function (error, result) {
-      // console.log(error);
-      // console.log(result);
-
-      if (error) {
-        toastr.error(error, 'Error muting user');
-        error_box.append('<p>Error muting user:</p>');
-        error_box.append('<p>' + error + '</p>');
-        $('#error').fadeIn();
-      } else {
-        toastr.success('Muted!');
-        $('#error').fadeOut();
-      }
-    });
-};
-Template.ConferenceSingle.conference_kick_user = function (bridge, user_id) {
-  var error_box = $('#errors');
-  Meteor.call('conference_kick_user',
-    bridge,
-    user_id,
-    function (error, result) {
-      // console.log(error);
-      // console.log(result);
-
-      if (error) {
-        toastr.error(error, 'Error kicking user');
-        error_box.append('<p>Error kicking user:</p>');
-        error_box.append('<p>' + error + '</p>');
-        $('#error').fadeIn();
-      } else {
-        $('#error').fadeOut();
-      }
-    });
-};

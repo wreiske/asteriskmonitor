@@ -6,7 +6,7 @@
         <div class="panel-body" id="errors">
         </div>
     </div>
-    <h1>Conference Room {{conference}} <small>{{elapsedHMS starmon_timestamp end_timestamp}}</small></h1>
+    <h1><i class="fa fa-phone-square" aria-hidden="true"></i> Conference Room {{conference}} <small>{{elapsedHMS starmon_timestamp end_timestamp}}</small></h1>
     <h4>Began {{prettyTime starmon_timestamp}}</h4>
     <p>
         <div class="input-group input-group-small">
@@ -20,19 +20,19 @@
     {{#if end_timestamp}}
     <h3>This conference has ended</h3>
     <div class="well">
-        Conference began on {{prettyTime starmon_timestamp}} and ended {{prettyTime end_timestamp}}. The conference was {{elapsedTime starmon_timestamp end_timestamp}} long.<br />Total calls: {{total_bridge_count}}.
+        Conference began on {{prettyTime starmon_timestamp}} and ended {{prettyTime end_timestamp}}. The conference was {{elapsedTime starmon_timestamp end_timestamp}} long.<br />Total calls: {{total_member_count}}.
     </div>
     {{else}}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Members
-                <span class="badge pull-right">{{active_bridge_count}} active members</span>
+                <span class="badge pull-right">{{active_member_count}} active members</span>
             </h3>
         </div>
         <div class="panel-body">
-            {{#if active_bridge_count}}
+            {{#if active_member_count}}
             {{#each active_members}}
-            <div class="modal" id="bridge_{{_id}}">
+            <div class="modal" id="member_{{_id}}">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -65,7 +65,7 @@
                     </thead>
                     <tbody>
                         {{#each active_members}}
-                        <tr data-toggle="bridge_{{_id}}" class="talking_{{talking}}">
+                        <tr data-toggle="member_{{_id}}" class="talking_{{talking}}">
                             <td>
                                 {{#if talking}}
                                 <i class="fa fa-circle"></i>
@@ -79,7 +79,7 @@
                             <td>{{timeSpeaking}}</td>
                             <td>{{reactiveTime starmon_timestamp}}</td>
                             <td>{{elapsedHMS starmon_timestamp leave_timestamp}}</td>
-                            <td><a onmousedown="Template.ConferenceSingle.conference_kick_user({{conference}}, '{{channel}}');">[Kick]</a> - <a onmousedown="Template.ConferenceSingle.conference_mute_user({{conference}}, '{{channel}}');">[Mute]</a> - <a onmousedown="$('#bridge_{{_id}}').modal({show:true});">[Info]</a></td>
+                            <td data-conf="{{conference}}" data-channel="{{channel}}" data-meetme="{{meetme}}" data-usernum="{{usernum}}"><a class="conf-kick-member">[<i class="fa fa-ban" aria-hidden="true"></i> Kick]</a> - <a class="conf-mute-member">[<i class="fa fa-microphone-slash" aria-hidden="true"></i> Mute]</a> - <a onmousedown="$('#member_{{_id}}').modal({show:true});">[Info]</a></td>
                         </tr>
                         {{/each}}
                     </tbody>
@@ -91,16 +91,16 @@
         </div>
     </div>
     {{/if}}
-    {{#if hangup_bridge_count}}
+    {{#if hangup_member_count}}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Hangups
-                <span class="badge pull-right">{{hangup_bridge_count}} total</span>
+                <span class="badge pull-right">{{hangup_member_count}} total</span>
             </h3>
         </div>
         <div class="panel-body">
             {{#each hangup_members}}
-            <div class="modal" id="bridge_{{_id}}">
+            <div class="modal" id="member_{{_id}}">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -143,7 +143,7 @@
                             <td>{{reactiveTime starmon_timestamp}}</td>
                             <td>{{reactiveTime leave_timestamp}}</td>
                             <td>{{elapsedHMS starmon_timestamp leave_timestamp}}</td>
-                            <td><a onmousedown="$('#bridge_{{_id}}').modal({show:true});">[Info]</a></td>
+                            <td><a onmousedown="$('#member_{{_id}}').modal({show:true});">[Info]</a></td>
                         </tr>
                         {{/each}}
                     </tbody>
@@ -163,7 +163,7 @@
             </thead>
             <tbody>
                 {{#each event}}
-                <tr data-toggle="bridge_{{_id}}" class="talking_{{talking}}">
+                <tr data-toggle="member_{{_id}}" class="talking_{{talking}}">
                     <td>
                         {{message}}
                     </td>
