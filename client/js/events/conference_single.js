@@ -67,7 +67,6 @@ Template.ConferenceSingle.events({
   },
   'click .conf-kick-member': function (event) {
     var error_box = $('#errors');
-    debugger;
     if (event.currentTarget.parentElement.dataset.meetme == null) {
       // confbridge
       Meteor.call('conference_kick_user',

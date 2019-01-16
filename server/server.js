@@ -142,7 +142,6 @@ Meteor.startup(function () {
                 true); // This parameter determines whether events are emitted.
 
             if (ami) {
-                debugger;
                 ami.keepConnected();
                 ami.on('error', function (err) {
                     console.log('ERROR', err);
