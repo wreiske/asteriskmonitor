@@ -67,7 +67,8 @@ Template.ConferenceSingle.events({
   },
   'click .conf-kick-member': function (event) {
     var error_box = $('#errors');
-    if (event.currentTarget.parentElement.dataset.meetme == "") {
+    debugger;
+    if (event.currentTarget.parentElement.dataset.meetme == null) {
       // confbridge
       Meteor.call('conference_kick_user',
         this.bridgeuniqueid,
@@ -105,7 +106,7 @@ Template.ConferenceSingle.events({
   },
   'click .conf-mute-member': function (event) {
     var error_box = $('#errors');
-    if (event.currentTarget.parentElement.dataset.meetme == "") {
+    if (event.currentTarget.parentElement.dataset.meetme == null) {
       // confbridge
 
       Meteor.call('conference_mute_user',

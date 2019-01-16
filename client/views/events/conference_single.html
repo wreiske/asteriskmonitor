@@ -79,7 +79,7 @@
                             <td>{{timeSpeaking}}</td>
                             <td>{{reactiveTime starmon_timestamp}}</td>
                             <td>{{elapsedHMS starmon_timestamp leave_timestamp}}</td>
-                            <td data-conf="{{conference}}" data-channel="{{channel}}" data-meetme="{{meetme}}" data-usernum="{{usernum}}"><a class="conf-kick-member">[<i class="fa fa-ban" aria-hidden="true"></i> Kick]</a> - <a class="conf-mute-member">[<i class="fa fa-microphone-slash" aria-hidden="true"></i> Mute]</a> - <a onmousedown="$('#member_{{_id}}').modal({show:true});">[Info]</a></td>
+                            <td data-conference="{{conference}}" data-channel="{{channel}}" data-meetme="{{meetme}}" data-usernum="{{usernum}}"><a class="conf-kick-member">[<i class="fa fa-ban" aria-hidden="true"></i> Kick]</a> - <a class="conf-mute-member">[<i class="fa fa-microphone-slash" aria-hidden="true"></i> Mute]</a> - <a onmousedown="$('#member_{{_id}}').modal({show:true});">[Info]</a></td>
                         </tr>
                         {{/each}}
                     </tbody>
