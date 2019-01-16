@@ -13,7 +13,7 @@ Template.ConferenceSingle.helpers({
     Session.get("secondTicker");
     let talkCounter = this.talkTime;
     if (this.talking) {
-      talkCounter = this.talkTime + Math.abs((new Date().getTime() - this.speak_timestamp) / 1000);
+      talkCounter = this.talkTime + Math.abs((moment(TimeSync.serverTime()) - this.speak_timestamp) / 1000);
     }
     return moment().startOf('day')
       .seconds(talkCounter)
