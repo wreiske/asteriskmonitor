@@ -1,100 +1,106 @@
 Template.ConferenceSingle.helpers({
-  members: function() {
-      return ConferenceMembers.find();
+  event: function () {
+    return ConferenceEvents.find({}, {
+      sort: {
+        starmon_timestamp: -1
+      }
+    });
   },
-  bridges: function() {
-      var people = ConferenceMembers.find({
-          'conference': {
-              $exists: true
-          }
-      }, {
-          sort: {
-              conference: -1
-          }
-      }).fetch();
-      var actualBridges = [];
-
-      $.each(people, function(key, val) {
-          var bridge = {
-              bridge: val.conference
-          }
-          var loc = -1;
-          $.each(actualBridges, function(key, ee) {
-              if (ee.bridge == val.conference) {
-                  loc = key;
-                  return false;
-              }
-          });
-          if (loc == -1) {
-              loc = actualBridges.push(bridge) - 1;
-          }
-          var person = {
-              person: val
-          }
-          if (typeof actualBridges[loc].people === "undefined") {
-              actualBridges[loc].people = [];
-              actualBridges[loc].count = 0;
-          }
-
-          actualBridges[loc].people.push(val);
-          actualBridges[loc].count++;
-      });
-      return actualBridges;
+  confShareUrl: function () {
+    return `${Meteor.absoluteUrl()}conference/${this.bridgeuniqueid}`;
   },
-  conference: function() {
-      return ConferenceMembers.find({
-          'conference': {
-              $exists: true
-          }
-      }, {
-          sort: {
-              conference: -1
-          }
-      });
+  timeSpeaking: function () {
+    Session.get("secondTicker");
+    let talkCounter = this.talkTime;
+    if (this.talking) {
+      talkCounter = this.talkTime + Math.abs((new Date().getTime() - this.speak_timestamp) / 1000);
+    }
+    return moment().startOf('day')
+      .seconds(talkCounter)
+      .format('H:mm:ss');
   },
-  bridge_count: function() {
-      return ConferenceMembers.find({
-          'conference': {
-              $exists: true
-          }
-      }).count();
+  active_members: function () {
+    return ConferenceMembers.find({
+      'leave_timestamp': {
+        $exists: false
+      }
+    }, {
+      sort: {
+        starmon_timestamp: -1
+      }
+    });
+  },
+  total_bridge_count: function () {
+    return ConferenceMembers.find().count();
+  },
+  active_bridge_count: function () {
+    return ConferenceMembers.find({
+      'leave_timestamp': {
+        $exists: false
+      }
+    }).count();
+  },
+  hangup_members: function () {
+    return ConferenceMembers.find({
+      'leave_timestamp': {
+        $exists: true
+      }
+    }, {
+      sort: {
+        starmon_timestamp: -1
+      }
+    });
+  },
+  hangup_bridge_count: function () {
+    return ConferenceMembers.find({
+      'leave_timestamp': {
+        $exists: true
+      }
+    }).count();
   }
 });
-
-Template.ConferenceSingle.conference_mute_user = function(bridge, channel) {
-  var error_box = $("#errors");
+Template.ConferenceSingle.events({
+  'click #permalink': function (event) {
+    copyToClipboard(event.target.value);
+    toastr.success('Copied conference link to clipboard');
+  }
+});
+Template.ConferenceSingle.conference_mute_user = function (bridge, channel) {
+  var error_box = $('#errors');
   Meteor.call('conference_mute_user',
-      bridge,
-      channel,
-      function(error, result) {
-          // console.log(error);
-          // console.log(result);
+    bridge,
+    channel,
+    function (error, result) {
+      // console.log(error);
+      // console.log(result);
 
-          if (error) {
-              error_box.append('<p>Error muting user:</p>');
-              error_box.append('<p>' + error + '</p>');
-              $("#error").fadeIn();
-          } else {
-              toastr.success('Muted!');
-              $("#error").fadeOut();
-          }
-      });
+      if (error) {
+        toastr.error(error, 'Error muting user');
+        error_box.append('<p>Error muting user:</p>');
+        error_box.append('<p>' + error + '</p>');
+        $('#error').fadeIn();
+      } else {
+        toastr.success('Muted!');
+        $('#error').fadeOut();
+      }
+    });
 };
-Template.ConferenceSingle.conference_kick_user = function(bridge, user_id) {
-  var error_box = $("#errors");
+Template.ConferenceSingle.conference_kick_user = function (bridge, user_id) {
+  var error_box = $('#errors');
   Meteor.call('conference_kick_user',
-      bridge,
-      user_id,
-      function(error, result) {
-          // console.log(error);
-          // console.log(result);
+    bridge,
+    user_id,
+    function (error, result) {
+      // console.log(error);
+      // console.log(result);
 
-          if (error) {
-              error_box.append('<p>Error kicking user:</p>');
-              error_box.append('<p>' + error + '</p>');
-              $("#error").fadeIn();
-          } else {
-              $("#error").fadeOut();
-          }
-      });
+      if (error) {
+        toastr.error(error, 'Error kicking user');
+        error_box.append('<p>Error kicking user:</p>');
+        error_box.append('<p>' + error + '</p>');
+        $('#error').fadeIn();
+      } else {
+        $('#error').fadeOut();
+      }
+    });
 };

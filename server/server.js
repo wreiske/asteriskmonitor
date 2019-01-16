@@ -40,11 +40,7 @@ Meteor.publish('directory', function () {
 });
 
 Meteor.publish('UserCount', function () {
-    if (this.userId) {
-        Counts.publish(this, 'user-count', Meteor.users.find());
-    } else {
-        this.ready();
-    }
+    Counts.publish(this, 'user-count', Meteor.users.find());
 });
 
 Meteor.startup(function () {
@@ -407,9 +403,8 @@ function StartAMI() {
             //AmiLog._ensureIndex( { 'starmon_timestamp': 1 }, { expireAfterSeconds: 60 } );
             ami.on('managerevent', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
-                //console.log(evt);
                 if (evt.event == 'MeetmeTalking' || evt.event == 'ConfbridgeTalking' || evt.event == 'RTCPSent' || evt.event == 'RTCPReceived' || evt.event == 'VarSet') {
-                    return
+                    return;
                 } else {
                     AmiLog.insert(evt);
                 }
@@ -420,52 +415,98 @@ function StartAMI() {
             //
             ami.on('join', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
-                //console.log(evt);
                 Queue.insert(evt);
             }));
 
             ami.on('leave', Meteor.bindEnvironment(function (evt) {
-                evt.starmon_timestamp = Date.now();
-                //console.log(evt);
                 Queue.remove({
                     uniqueid: evt.uniqueid
                 });
             }));
 
-
-            ami.on('confbridgejoin', Meteor.bindEnvironment(function (evt) {
-                evt.starmon_timestamp = Date.now();
-                console.log(evt);
-                ConferenceMembers.insert(evt);
-            }));
-
             ami.on('confbridgetalking', Meteor.bindEnvironment(function (evt) {
-                evt.starmon_timestamp = Date.now();
-                console.log(evt);
                 let talking = false;
+                let talkTime = 0;
                 if (evt.talkingstatus == 'on') {
                     talking = true;
+                } else {
+                    const member = ConferenceMembers.findOne({
+                        uniqueid: evt.uniqueid
+                    });
+                    talkTime = Math.abs((new Date().getTime() - member.speak_timestamp) / 1000);
                 }
                 ConferenceMembers.update({
                     uniqueid: evt.uniqueid
                 }, {
                     $set: {
-                        talking: talking
+                        speak_timestamp: Date.now(),
+                        talking: talking,
+                    },
+                    $inc: {
+                        talkTime: talkTime
                     }
+                });
+            }));
+
+            ami.on('confbridgejoin', Meteor.bindEnvironment(function (evt) {
+                evt.starmon_timestamp = Date.now();
+
+                // Update Conference Users Count
+                Conferences.update({
+                    'bridgeuniqueid': evt.bridgeuniqueid
+                }, {
+                    $inc: {
+                        memberTotal: 1
+                    }
+                });
+
+                // Add caller to member list
+                ConferenceMembers.insert(evt);
+
+                // Push a message to the conference events
+                const callerInfo = `${evt.calleridname} ${evt.calleridnum}`.trim();
+                ConferenceEvents.insert({
+                    'message': `${callerInfo} joined the conference.`,
+                    'event': 'join',
+                    'starmon_timestamp': Date.now(),
+                    'bridgeuniqueid': evt.bridgeuniqueid
                 });
             }));
 
             ami.on('confbridgeleave', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
-                console.log(evt);
-                ConferenceMembers.remove({
+                console.log('GOT A LEAVE', evt);
+                // Update Conference Users Count
+                Conferences.update({
+                    'bridgeuniqueid': evt.bridgeuniqueid
+                }, {
+                    $inc: {
+                        memberTotal: -1
+                    }
+                });
+
+                // Remove member from list
+                // TODO: don't actually, remove. Just set leaveTimestamp
+                ConferenceMembers.update({
                     uniqueid: evt.uniqueid
+                }, {
+                    $set: {
+                        leave_timestamp: Date.now(),
+                        talking: false,
+                    }
+                });
+
+                // Post leave message to the conf
+                const callerInfo = `${evt.calleridname} ${evt.calleridnum}`.trim();
+                ConferenceEvents.insert({
+                    'message': `${callerInfo} left the conference.`,
+                    'event': 'leave',
+                    'starmon_timestamp': Date.now(),
+                    'bridgeuniqueid': evt.bridgeuniqueid
                 });
             }));
 
             ami.on('confbridgeend', Meteor.bindEnvironment(function (evt) {
-                evt.starmon_timestamp = Date.now();
-                console.log(evt);
                 Conferences.update({
                     'bridgeuniqueid': evt.bridgeuniqueid
                 }, {
@@ -473,12 +514,25 @@ function StartAMI() {
                         end_timestamp: new Date()
                     }
                 });
+                ConferenceEvents.insert({
+                    'message': `Conference has ended.`,
+                    'event': 'end',
+                    'starmon_timestamp': Date.now(),
+                    'bridgeuniqueid': evt.bridgeuniqueid
+                });
             }));
 
             ami.on('confbridgestart', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
+                evt.memberTotal = 0;
                 console.log(evt);
                 Conferences.insert(evt);
+                ConferenceEvents.insert({
+                    'message': `Conference has began.`,
+                    'event': 'begin',
+                    'starmon_timestamp': Date.now(),
+                    'bridgeuniqueid': evt.bridgeuniqueid
+                });
             }));
 
             //
