@@ -85,6 +85,7 @@ mongo-decimal@0.1.0
 mongo-dev-server@1.1.0
 mongo-id@1.0.7
 mongo-livedata@1.0.12
+multiply:iron-router-progress@1.0.2
 natestrauser:animate-css@3.5.1
 npm-bcrypt@0.9.3
 npm-mongo@3.1.1
@@ -92,6 +93,9 @@ oauth@1.2.6
 oauth2@1.2.1
 observe-sequence@1.0.16
 ordered-dict@1.1.0
+ostrio:iron-router-helper-class@1.0.1
+ostrio:iron-router-meta@1.1.0
+ostrio:iron-router-title@1.0.3
 promise@0.11.2
 random@1.1.0
 rate-limit@1.0.9

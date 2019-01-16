@@ -41,3 +41,6 @@ twbs:bootstrap
 check@1.3.1
 flawless:meteor-toastr
 natestrauser:animate-css
+ostrio:iron-router-meta
+multiply:iron-router-progress
+session
