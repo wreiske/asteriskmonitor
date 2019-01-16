@@ -60,7 +60,7 @@
               <th>Conference</th>
               <th>Started</th>
               <th>Ended</th>
-              <th>Elapsed</th>
+              <th>Total Time</th>
             </tr>
           </thead>
           <tbody>
@@ -70,7 +70,7 @@
               <td>{{conference}}</td>
               <td>{{reactiveTime}}</td>
               <td>{{reactiveTime end_timestamp}}</td>
-              <td>{{elapsedTime starmon_timestamp end_timestamp}}</td>
+              <td>{{elapsedHMS starmon_timestamp end_timestamp}}</td>
             </tr>
             {{/each}}
           </tbody>
