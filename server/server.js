@@ -540,7 +540,7 @@ function StartAMI() {
 
                 // Check if this meet me has started yet.. 
                 // meetme doesn't have a "Start" event like confbridge does
-                const conf = Conferences.findOne({
+                let conf = Conferences.findOne({
                     'conference': evt.meetme,
                     end_timestamp: {
                         $exists: false
@@ -557,6 +557,9 @@ function StartAMI() {
                         'starmon_timestamp': Date.now(),
                         'bridgeuniqueid': evt.bridgeuniqueid
                     });
+                } else {
+                    evt.bridgeuniqueid = conf.bridgeuniqueid;
+                    evt.conference = conf.conference;
                 }
 
                 // Update Conference Users Count
@@ -590,7 +593,9 @@ function StartAMI() {
                     const member = ConferenceMembers.findOne({
                         uniqueid: evt.uniqueid
                     });
-                    talkTime = Math.abs((new Date().getTime() - member.speak_timestamp) / 1000);
+                    if (member) {
+                        talkTime = Math.abs((new Date().getTime() - member.speak_timestamp) / 1000);
+                    }
                 }
                 ConferenceMembers.update({
                     uniqueid: evt.uniqueid
@@ -622,7 +627,6 @@ function StartAMI() {
                             memberTotal: -1
                         }
                     });
-
 
                     // Remove member from list
                     ConferenceMembers.update({
