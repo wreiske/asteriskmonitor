@@ -14,7 +14,7 @@ Template.setup.events = {
         e.preventDefault();
         var valid = true;
 
-        const error_box = $("#errors");
+        const error_box = $('#errors');
         const adminUser = {
             email: $(e.target).find('[name=email]').val().trim(),
             password: $(e.target).find('[name=password]').val().trim(),
@@ -24,7 +24,7 @@ Template.setup.events = {
             }
         }
         const password_verify = $(e.target).find('[name=password_verify]').val();
-        error_box.html("");
+        error_box.html('');
 
         if (adminUser.password != password_verify) {
             error_box.append('<p>Passwords don\'t match.</p>');
@@ -39,19 +39,20 @@ Template.setup.events = {
             valid = false;
         }
         if (valid) {
-            $("#error").fadeOut();
-            Meteor.call("registerAdminUser", adminUser, function (err, res) {
+            $('#error').fadeOut();
+            Meteor.call('registerAdminUser', adminUser, function (err, res) {
                 if (err) {
+                    toastr.error(err, 'Error registering user');
                     error_box.append('<p>Error registering user:</p>');
                     error_box.append('<p>' + err + '</p>');
-                    $("#error").fadeIn();
+                    $('#error').fadeIn();
                 } else {
-                    toastr.success("Account created. Please login with your new account!", "Setup Successful!");
+                    toastr.success('Account created. Please login with your new account!', 'Setup Successful!');
                     window.location = '/';
                 }
             });
         } else {
-            $("#error").fadeIn();
+            $('#error').fadeIn();
         }
     }
 };

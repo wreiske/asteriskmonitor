@@ -1,12 +1,12 @@
 <template name="footer">
-    <div id="footer">
+    <footer class="footer bg-dark">
         <div class="container">
-            <p class="text-muted">
-                <span class="fa fa-asterisk"></span>monitor - Realtime Asterisk Web Monitor &copy; {{currentYear}} <a href="https://www.mieweb.com/">Medical Informatics Engineering</a>. Created by <a href="https://github.com/wreiske/">Will Reiske</a>.
-                {{#if currentUser}} 
-                    {{#if isadmin}} &dash; <a href="/admin">Administration Panel</a>{{/if}} 
-                {{/if}}
-            </p>
+          <span class="text-muted">
+            <span class="fa fa-asterisk"></span>monitor - Realtime Asterisk Web Monitor &copy; {{currentYear}} <a href="https://www.mieweb.com/">Medical Informatics Engineering</a> &dash; <a href="https://github.com/wreiske/asteriskmonitor" target="_blank"><img src="https://img.shields.io/github/stars/wreiske/asteriskmonitor.svg"></a>
+            {{#if currentUser}} 
+                {{#if isadmin}} &dash; <a class="btn btn-sm btn-primary" href="/admin">Administration Panel</a>{{/if}} 
+            {{/if}}
+          </span>
         </div>
-    </div>
+      </footer>
 </template>

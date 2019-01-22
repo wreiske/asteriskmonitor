@@ -1,54 +1,61 @@
 <template name="admin">
-    {{#if isadmin}} {{>adminstart}} {{else}} {{>notadmin}} {{/if}}
+    <main role="main" class="container">
+        {{#if isadmin}} {{>adminstart}} {{else}} {{>notadmin}} {{/if}}
+    </main>
 </template>
 <template name="adminstart">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Asterisk Server Information</h3>
+
+    <div class="card bg-default">
+        <div class="card-header">
+            Asterisk Server Information
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <form action="/admin" method="POST">
                 <p>
-                    <div class="input-group input-group-small">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-cloud"></span>
-                        </span>
-                        <input type="text" name="ami_host" value="{{ami.host}}" class="form-control" placeholder="Host">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="host-addon"><span class="fa fa-cloud"></span></span>
+                        </div>
+                        <input type="text" name="ami_host" class="form-control" value="{{ami.host}}" placeholder="Host" aria-label="Host" aria-describedby="host-addon">
                     </div>
+
                 </p>
                 <p>
-                    <div class="input-group input-group-small">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-cloud"></span>
-                        </span>
-                        <input type="text" name="ami_port" value="{{ami.port}}" class="form-control" placeholder="Port (default 5038)">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="port-addon"><span class="fa fa-cloud"></span></span>
+                        </div>
+                        <input type="text" name="ami_port" class="form-control" value="{{ami.port}}" placeholder="Port (default 5038)" aria-label="Port (default 5038)" aria-describedby="port-addon">
                     </div>
+
                 </p>
                 <p>
-                    <div class="input-group input-group-small">
-                        <span class="input-group-addon">
-                            <span class="fa fa-user"></span>
-                        </span>
-                        <input type="text" name="ami_user" value="{{ami.user}}" class="form-control" placeholder="Username">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="username-addon"><span class="fa fa-user"></span></span>
+                        </div>
+                        <input type="text" name="ami_user" class="form-control" value="{{ami.user}}" placeholder="Username" aria-label="Username" aria-describedby="username-addon">
                     </div>
+
                 </p>
                 <p>
-                    <div class="input-group input-group-small">
-                        <span class="input-group-addon">
-                            <span class="fa fa-lock"></span>
-                        </span>
-                        <input type="password" name="ami_pass" value="{{ami.pass}}" class="form-control" placeholder="Password">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="username-addon"><span class="fa fa-lock"></span></span>
+                        </div>
+                        <input type="password" name="ami_pass" class="form-control" value="{{ami.pass}}" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
                     </div>
+
                 </p>
                 <p>
                     <button type="submit" class="btn btn-primary btn-small">Save</button>
                 </p>
             </form>
-            <div style="display:none;" id="error" class="panel panel-danger">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Error!</h3>
+            <div style="display:none;" id="error" class="card card-danger">
+                <div class="card-header">
+                    Error!
                 </div>
-                <div class="panel-body" id="errors">
+                <div class="card-body" id="errors">
                 </div>
             </div>
         </div>
@@ -57,11 +64,11 @@
 </template>
 
 <template name="notadmin">
-    <div class="panel panel-danger">
-        <div class="panel-heading">
-            <h3 class="panel-title">Access Denied</h3>
+    <div class="card card-danger">
+        <div class="card-header">
+            Access Denied
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             You do not have access to this feature.
         </div>
     </div>

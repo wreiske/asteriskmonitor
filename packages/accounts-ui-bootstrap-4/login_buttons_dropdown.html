@@ -1,0 +1,189 @@
+<!--           -->
+<!-- LOGGED IN -->
+<!--           -->
+<template name="_loginButtonsLoggedInDropdown">
+  <div class="dropdown login-link-and-dropdown-list">
+    <a class="btn btn-link dropdown-toggle login-link-text" id="login-sign-in-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="0,12">
+      <span class="d-none d-md-inline-block ">{{displayName}}</span>
+      <span class="d-md-none"><i class="fa fa-lg fa-user"></i></span>
+    </a>
+
+      <div id="login-dropdown-list" class="dropdown-menu accounts-dialog">
+        <h3 class="dropdown-header">{{displayName}}</h3>
+        <div class="login-close-text-clear"></div>
+
+        {{#if inMessageOnlyFlow}}
+          {{> _loginButtonsMessages}}
+        {{else}}
+          {{#if inChangePasswordFlow}}
+            {{> _loginButtonsChangePassword}}
+          {{else}}
+            {{> _loginButtonsLoggedInDropdownActions}}
+          {{/if}}
+        {{/if}}
+      </div>
+  </div>
+</template>
+
+<template name="_loginButtonsLoggedInDropdownActions">
+  {{#if allowChangingPassword}}
+    <div class="login-button" id="login-buttons-open-change-password">
+      Change password
+    </div>
+  {{/if}}
+
+  <div class="dropdown-item login-button" id="login-buttons-logout">
+    Sign out
+  </div>
+
+  {{> _loginButtonsMessages}}
+</template>
+
+<!--            -->
+<!-- LOGGED OUT -->
+<!--            -->
+<template name="_loginButtonsLoggedOutDropdown">
+  <div class="dropdown login-link-and-dropdown-list {{additionalClasses}}">
+    <a class="btn btn-link dropdown-toggle login-link-text" id="login-sign-in-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-offset="0,12">
+      <span class="d-none d-md-inline-block ">Sign in</span>
+      <span class="d-md-none"><i class="fa fa-lg fa-user"></i></span>
+    </a>
+
+      {{! This text is covered by the dropdown, but duplicating it here
+          makes the position of "Close" match the position of this text. }}
+
+      <div id="login-dropdown-list" class="dropdown-menu dropdown-menu-right accounts-dialog">
+        {{#if loggingIn}}
+          {{> _loginButtonsLoggingIn}}
+        {{/if}}
+        <div class="login-close-text-clear"></div>
+        {{> _loginButtonsLoggedOutAllServices}}
+      </div>
+
+  </div>
+</template>
+
+<template name="_loginButtonsLoggedOutAllServices">
+  {{#each services}}
+    {{#if isPasswordService}}
+      {{#if hasOtherServices}} {{! the password service will always come last }}
+        {{> _loginButtonsLoggedOutPasswordServiceSeparator}}
+      {{/if}}
+      {{> _loginButtonsLoggedOutPasswordService}}
+    {{else}}
+    <div class="row-login-sso">
+      {{> _loginButtonsLoggedOutSingleLoginButton}}
+    </div>
+
+    {{/if}}
+  {{/each}}
+
+  {{#unless hasPasswordService}}
+    {{> _loginButtonsMessages}}
+  {{/unless}}
+</template>
+
+<template name="_loginButtonsLoggedOutPasswordServiceSeparator">
+  <!-- <div class="or">
+    <span class="hline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <span class="or-text">or</span>
+    <span class="hline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  </div> -->
+</template>
+
+<template name="_loginButtonsLoggedOutPasswordService">
+  {{#if inForgotPasswordFlow}}
+    {{> _forgotPasswordForm}}
+  {{else}}
+    <form class="row-login login-form login-password-form">
+      {{#each fields}}
+        {{> _loginButtonsFormField}}
+      {{/each}}
+
+      {{> _loginButtonsMessages}}
+
+      <button class="btn btn-primary btn-block btn-login login-button-form-submit" id="login-buttons-password">
+        {{#if inSignupFlow}}
+          Create account
+        {{else}}
+          Sign in
+        {{/if}}
+      </button>
+
+      {{#if inLoginFlow}}
+        <div class="additional-link-container">
+        {{#if showCreateAccountLink}}
+            <a id="signup-link" class="btn btn-link btn-block">Create account</a>
+        {{/if}}
+
+        {{#if showForgotPasswordLink}}
+
+            <a id="forgot-password-link" class="btn btn-link btn-block">Forgot password</a>
+
+        {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if inSignupFlow}}
+        {{> _loginButtonsBackToLoginLink}}
+      {{/if}}
+    </form>
+  {{/if}}
+</template>
+
+<template name="_forgotPasswordForm">
+  <form class="row-login login-form">
+    <div id="forgot-password-email-label-and-input" class="form-group"> {{! XXX we should probably use loginButtonsFormField }}
+      <label id="forgot-password-email-label" class="sr-only" for="forgot-password-email">Email</label>
+      <input id="forgot-password-email" class="form-control" type="email" autocomplete="email" placeholder="Enter your email address"/>
+    </div>
+
+    {{> _loginButtonsMessages}}
+
+    <div class="btn btn-primary btn-block btn-login login-button-form-submit" id="login-buttons-forgot-password">
+      Reset password
+    </div>
+
+    {{> _loginButtonsBackToLoginLink}}
+  </form>
+</template>
+
+<template name="_loginButtonsBackToLoginLink">
+  <div class="additional-link-container">
+    <a id="back-to-login-link" class="btn btn-link">
+      <i class="fa fa-chevron-left"></i> Back to Sign in</a>
+  </div>
+</template>
+
+<template name="_loginButtonsFormField">
+  {{#if visible}}
+    <div id="login-{{fieldName}}-label-and-input" class="form-group" style="{{fieldStyle}}">
+      <label id="login-{{fieldName}}-label" class="sr-only" for="login-{{fieldName}}">
+        {{fieldLabel}}
+      </label>
+      <input
+        id="login-{{fieldName}}"
+        type="{{inputType}}"
+        value="{{fieldValue}}"
+        autocomplete="{{autocomplete}}"
+        class="form-control"
+        placeholder="{{fieldName}}"
+      />
+    </div>
+  {{/if}}
+</template>
+
+<template name="_loginButtonsChangePassword">
+  <form class="login-form">
+
+    {{#each fields}}
+      {{> _loginButtonsFormField}}
+    {{/each}}
+
+    {{> _loginButtonsMessages}}
+
+    <div class="login-button login-button-form-submit" id="login-buttons-do-change-password">
+      Change password
+    </div>
+  </form>
+</template>

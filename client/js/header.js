@@ -1,8 +1,8 @@
 Template.header.helpers({
-    active: function (page, currentpage) {
+    active: function (page) {
         if (page == currentpage) {
-            return ' class=active ';
+            return ' class=nav-item active ';
         }
-        return '';
+        return ' class=nav-item';
     }
 });

@@ -1,46 +1,163 @@
-/* CSS declarations go here */
- html, body {
-    height: 100%;
-    /* The html and body elements cannot have any padding or margin. */
-}
-/* Wrapper for page content to push down footer */
- #wrap {
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
     min-height: 100%;
-    height: auto;
-    /* Negative indent footer by its height */
-    margin: 0 auto -60px;
-    /* Pad bottom by footer height */
-    padding: 0 0 60px;
 }
-/* Set the fixed height of the footer here */
- #footer {
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
     height: 60px;
+    line-height: 60px;
+    /* Vertically center the text there */
     background-color: #f5f5f5;
 }
-/* Custom page CSS
--------------------------------------------------- */
 
+
+/* Custom page CSS
+  -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
- #wrap > .container {
+
+body>.container {
     padding: 60px 15px 0;
 }
-.container .text-muted {
-    margin: 20px 0;
-}
-#footer > .container {
+
+.footer>.container {
+    padding-right: 15px;
     padding-left: 15px;
-    padding-right: 15px;
 }
+
+code {
+    font-size: 80%;
+}
+
 .hidden {
-    display:none;
+    display: none;
 }
-.blockquote-reverse, blockquote.pull-right {
-    padding-right: 15px;
-    padding-left: 0;
-    border-right: 5px solid #eee;
-    border-left: 0;
-    text-align: right;
-}
-.talking_true{
+
+.talking_true {
     background-color: rgb(218, 250, 218);
+}
+
+.btn-google {
+    background-color: #fff;
+}
+
+.btn-google img {
+    height: 30px;
+}
+
+
+.preloader {
+    position: relative;
+    margin: 0 auto;
+    width: 100px;
+}
+
+.preloader:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+.circular {
+    animation: rotate 2s linear infinite;
+    height: 50px;
+    transform-origin: center center;
+    width: 50px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+    stroke-linecap: round;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px;
+    }
+
+    100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124px;
+    }
+}
+
+@keyframes color {
+
+    100%,
+    0% {
+        stroke: #d62d20;
+    }
+
+    40% {
+        stroke: #0057e7;
+    }
+
+    66% {
+        stroke: #008744;
+    }
+
+    80%,
+    90% {
+        stroke: #ffa700;
+    }
+}
+
+.preloader {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    position: fixed;
+    z-index: 99999;
+}
+
+.preloader .cssload-speeding-wheel {
+    position: absolute;
+    top: calc(50% - 3.5px);
+    left: calc(50% - 3.5px)
+}
+
+.toast-success {
+    background-color: #00a352;
+}
+
+.toast-error {
+    background-color: #a30000;
+}
+
+.toast-info {
+    background-color: #0054a3;
+}
+
+.toast-warning {
+    background-color: #ffc400;
 }

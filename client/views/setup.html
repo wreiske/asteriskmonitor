@@ -1,63 +1,67 @@
 <template name="setup">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">First time setup</h3>
-        </div>
-        <div class="panel-body">
-            <p>Welcome to your new <span class="fa fa-asterisk"></span>mon setup. To get started fill out the form below and hit Continue.</p>
-            <form action="/" method="POST">
-                <p>
-                    <div class="input-group input-group-small" id="div_email">
-                        <span class="input-group-addon">
-                            <span class="fa fa-envelope"></span>
-                        </span>
-                        <input type="email" required name="email" placeholder="Please enter your current email address." class="form-control">
-                    </div>
-                </p>
-                <p>
-                    <div class="input-group input-group-small" id="div_fullname">
-                        <span class="input-group-addon">
-                            <span class="fa fa-user"></span>
-                        </span>
-                        <input type="text" required name="fullname" class="form-control" placeholder="This is your full name, first and last.">
-                    </div>
-                </p>
-                <p>
-                    <div class="input-group input-group-small" id="div_username">
-                        <span class="input-group-addon">
-                            <span class="fa fa-user-secret"></span>
-                        </span>
-                        <input type="text" required name="username" class="form-control" placeholder="What would you like your administrator username to be?">
-                    </div>
-                </p>
-                <p>
-                    <div class="input-group input-group-small" id="div_password">
-                        <span class="input-group-addon">
-                            <span class="fa fa-lock"></span>
-                        </span>
-                        <input type="password" required name="password" class="form-control" placeholder="Pick something strong for your password.">
-                    </div>
-                </p>
-                <p>
-                    <div class="input-group input-group-small" id="div_password_verify">
-                        <span class="input-group-addon">
-                            <span class="fa fa-lock"></span>
-                        </span>
-                        <input type="password" required name="password_verify" class="form-control" placeholder="Please type your password again.">
-                    </div>
-                </p>
-                <p>
-                    <button type="submit" class="btn btn-primary btn-small">Continue</button>
-                </p>
-            </form>
-        </div>
-    </div>
+    <main role="main" class="container">
+        <div class="card bg-default">
+            <div class="card-header">
+                First Time Setup
+            </div>
+            <div class="card-body">
+                <p>Welcome to your new <span class="fa fa-asterisk"></span>monitor setup. To get started, fill out the form below and hit Continue.</p>
+                <form action="/" method="POST">
+                    <p>
+                        <div class="input-group mb-3" id="div_email">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="email-addon"><span class="fa fa-envelope"></span></span>
+                            </div>
+                            <input type="email" required name="email" class="form-control" placeholder="Please enter your current email address." aria-label="Email" aria-describedby="email-addon">
+                        </div>
 
-    <div style="display:none;" id="error" class="panel panel-danger">
-        <div class="panel-heading">
-            <h3 class="panel-title">Error!</h3>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3" id="div_fullname">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="fullname-addon"><span class="fa fa-user"></span></span>
+                            </div>
+                            <input type="text" name="fullname" class="form-control" placeholder="This is your full name, first and last." aria-label="Full Name" aria-describedby="fullname-addon">
+                        </div>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3" id="div_username">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="username-addon"><span class="fa fa-user"></span></span>
+                            </div>
+                            <input type="text" required name="username" class="form-control" placeholder="What would you like your administrator username to be?" aria-label="Username" aria-describedby="username-addon">
+                        </div>
+
+                    </p>
+                    <p>
+                        <div class="input-group mb-3" id="div_password">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="password-addon"><span class="fa fa-lock"></span></span>
+                            </div>
+                            <input type="password" required name="password" class="form-control" placeholder="Pick something strong for your password." aria-label="Password" aria-describedby="password-addon">
+                        </div>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3" id="div_password_verify">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="password-verify-addon"><span class="fa fa-lock"></span></span>
+                            </div>
+                            <input type="password" required name="password_verify" class="form-control" placeholder="Please type your password again." aria-label="Password Again" aria-describedby="password-verify-addon">
+                        </div>
+                    </p>
+                    <p>
+                        <button type="submit" class="btn btn-primary btn-small">Continue</button>
+                    </p>
+                </form>
+            </div>
         </div>
-        <div class="panel-body" id="errors">
+
+        <div style="display:none;" id="error" class="card card-danger">
+            <div class="card-header">
+                Error!
+            </div>
+            <div class="card-body" id="errors">
+            </div>
         </div>
-    </div>
+    </main>
 </template>

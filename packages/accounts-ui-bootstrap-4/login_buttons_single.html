@@ -1,0 +1,33 @@
+<template name="_loginButtonsLoggedOutSingleLoginButton">
+  <div class="col login-text-and-button">
+    <div class="btn btn-google btn-block login-button single-login-button {{#unless configured}}configure-button{{/unless}}" id="login-buttons-{{name}}">
+      {{#if cannotConfigure}}
+        <span class="">{{capitalizedName}} not configured</span>
+      {{else}}
+        <div class="login-image" id="login-buttons-image-{{name}}">
+          <img src="/images/app/icon-{{name}}.svg" />
+        </div>
+        {{#if configured}}
+          <!-- <span class="text-besides-image sign-in-text-{{name}}"> {{capitalizedName}}</span> -->
+        {{else}}
+            <span class="text-besides-image configure-text-{{name}}">Configure {{capitalizedName}} Login</span>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="_loginButtonsLoggingInSingleLoginButton">
+  <div class="dropdown-item login-text-and-button ">
+    {{> _loginButtonsLoggingIn}}
+  </div>
+</template>
+
+<template name="_loginButtonsLoggedInSingleLogoutButton">
+  <div class="dropdown-item login-text-and-button">
+    <div class="login-display-name">
+      {{displayName}}
+    </div>
+    <div class="login-button single-login-button" id="login-buttons-logout">Sign Out</div>
+  </div>
+</template>

@@ -1,67 +1,69 @@
 <template name="editprofile">
-    <hr />{{#unless currentUser.profile.name}}
-    <div class="panel panel-warning">
-        <div class="panel-heading">
-            <h3 class="panel-title">No Full Name associated with this account</h3>
+    <main role="main" class="container">
+        <h1>Hello, {{#if currentUser.profile.name}}{{currentUser.profile.name}}{{else}}{{currentUser.emails.[0].address}}{{/if}}.</h1>
+        <hr />{{#unless currentUser.profile.name}}
+
+        <div class="card bg-warning">
+            <div class="card-header">
+                No Full Name associated with this account
+            </div>
+            <div class="card-body">
+                Please make sure you have filled out your profile information fully. </div>
         </div>
-        <div class="panel-body">
-            Please make sure you have filled out your profile information fully.
+        {{/unless}} {{#unless currentUser.username}}
+        <div class="card bg-warning">
+            <div class="card-header">
+                No username associated with this account
+            </div>
+            <div class="card-body">
+                Please make sure you have filled out your profile information fully. </div>
         </div>
-    </div>
-    {{/unless}} {{#unless currentUser.username}}
-    <div class="panel panel-warning">
-        <div class="panel-heading">
-            <h3 class="panel-title">No username associated with this account</h3>
-        </div>
-        <div class="panel-body">
-            Please make sure you have filled out your profile information fully.
-        </div>
-    </div>
-    {{/unless}}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Edit Profile</h3>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-xs-6 col-sm-3">
-                    <img width="265" class="img-thumbnail" src="https://www.gravatar.com/avatar/{{md5 currentUser.emails.[0].address}}?s=265" alt="{{currentUser.emails.[0].address}}" />
-                </div>
-                <div class="col-xs-12 col-md-9">
-                    <p>
-                        <small>You can change your avatar at <a href="https://gravatar.com/" target="_blank">gravatar.com</a> - You can change your password by clicking your name on the top right of your screen, or <a href="javascript:$('#login-dropdown-list').addClass('open');">clicking here</a>.</small>
-                    </p>
-                    <p>
-                        <div class="input-group input-group-small">
-                            <span class="input-group-addon">
-                                <span class="fa fa-envelope"></span>
-                            </span>
-                            <input type="email" disabled id="email" value="{{currentUser.emails.[0].address}}" class="form-control">
-                        </div>
-                    </p>
-                    <form action="/" method="POST">
+        {{/unless}}
+        <div class="card bg-default">
+            <div class="card-header">
+                Edit Profile
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 col-sm-3 col-6 pull-center mx-auto">
+                        <img class="img-thumbnail pull-center mx-auto" src="https://www.gravatar.com/avatar/{{md5 currentUser.emails.[0].address}}?s=512" alt="{{currentUser.emails.[0].address}}" />
+                    </div>
+                    <div class="col-md-8 col-lg-9 col-sm-9 col-12 ">
                         <p>
-                            <div class="input-group input-group-small">
-                                <span class="input-group-addon">
-                                    <span class="fa fa-user"></span>
-                                </span>
-                                <input type="text" name="fullname" value="{{currentUser.profile.name}}" class="form-control" placeholder="Full Name">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="email-addon"><span class="fa fa-envelope"></span></span>
+                                </div>
+                                <input type="text" disabled class="form-control" value="{{currentUser.emails.[0].address}}" id="email" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
                             </div>
                         </p>
-                        <p>
-                            <div class="input-group input-group-small">
-                                <span class="input-group-addon">
-                                    <span class="fa fa-user-secret"></span>
-                                </span>
-                                <input type="text" name="username" value="{{currentUser.username}}" class="form-control" placeholder="Username">
-                            </div>
-                        </p>
-                        <p>
-                            <button type="submit" class="btn btn-primary btn-small">Save</button>
-                        </p>
-                    </form>
+                        <form action="/" method="POST">
+                            <p>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="fullname-addon"><span class="fa fa-user"></span></span>
+                                    </div>
+                                    <input type="text" class="form-control" value="{{currentUser.profile.name}}" name="fullname" placeholder="Full Name" aria-label="Full Name" aria-describedby="fullname-addon">
+                                </div>
+                            </p>
+                            <p>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="username-addon"><span class="fa fa-user-secret"></span></span>
+                                    </div>
+                                    <input type="text" name="username" class="form-control" value="{{currentUser.username}}" placeholder="Username" aria-label="Username" aria-describedby="username-addon">
+                                </div>
+                            </p>
+                            <p>
+                                <small>You can change your avatar at <a href="https://gravatar.com/" target="_blank">gravatar.com</a></small>
+                            </p>
+                            <p>
+                                <button type="submit" class="btn btn-primary btn-small pull-right">Save</button>
+                            </p>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </template>

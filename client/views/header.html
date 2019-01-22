@@ -1,57 +1,56 @@
 <template name="header">
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/"><span class="fa fa-asterisk"></span>monitor :: {{currentRoute}}</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                {{#if firstrun}}
-                <ul class="nav navbar-nav pull-right">
-                    <li class="active">
-                        <a href="/setup">Setup</a>
-                    </li>
-                </ul>
-                {{else}}
-                <ul class="nav navbar-nav pull-right">
-                    {{#if notloggedin}}
-                    <li {{active "login" currentPage}}>
-                        <a href="/">Please Login</a>
+    <header>
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="{{pathFor 'home'}}">
+                <span class="fa fa-asterisk"></span>monitor :: {{currentRoute}}
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    {{#if firstrun}}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{pathFor 'setup'}}">Setup</a>
                     </li>
                     {{else}}
+                    {{#if notloggedin}}
+                    <li {{active "login"}}>
+                        <a class="nav-link" href="{{pathFor 'login'}}">Please Login</a>
+                    </li>
+                    {{else}}
+                    <li {{active "home"}}>
+                        <a class="nav-link" href="{{pathFor 'home'}}">Home</a>
+                    </li>
+                    <li {{active "conferences"}}>
+                        <a class="nav-link" href="{{pathFor 'conferences'}}">Conferences</a>
+                    </li>
 
-                    <li {{active "home" currentPage}}>
-                        <a href="{{pathFor 'home'}}">Home</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Events
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{pathFor 'calls'}}">Calls</a>
+                            <a class="dropdown-item" href="{{pathFor 'amilog'}}">All Events</a>
+                            <a class="dropdown-item" href="{{pathFor 'queue'}}">Call Queue</a>
+                            <!--<div class="dropdown-divider"></div>-->
+                        </div>
                     </li>
-                    <li {{active "events" currentPage}} class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Events <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li {{active "calls" currentPage}}>
-                                <a href="{{pathFor 'calls'}}">Calls</a>
-                            </li>
-                            <li {{active "conferences" currentPage}}>
-                                <a href="{{pathFor 'conferences'}}">Conferences</a>
-                            </li>
-                            <li {{active "amilog" currentPage}}>
-                                <a href="{{pathFor 'amilog'}}">All Events</a>
-                            </li>     
-                            <li {{active "queue" currentPage}}>
-                                <a href="{{pathFor 'queue'}}">Call Queue</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li {{active "about" currentPage}}>
-                        <a href="{{pathFor 'about'}}">About</a>
+                    <li {{active "about"}}>
+                        <a class="nav-link" href="{{pathFor 'about'}}">About</a>
                     </li>
                     {{/if}}
+                    {{/if}}
                 </ul>
+                {{#if currentUser}}
+                <form class="form-inline my-2 my-lg-0">
+                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Logged in as {{#if currentUser.profile.name}}{{currentUser.profile.name}}{{else}}{{currentUser.emails.[0].address}}{{/if}}</button>
+                </form>
                 {{/if}}
             </div>
-        </div>
-    </div>
+        </nav>
+    </header>
 </template>

@@ -1,178 +1,183 @@
 <template name="ConferenceSingle">
-    <div style="display:none;" id="error" class="panel panel-danger">
-        <div class="panel-heading">
-            <h3 class="panel-title">Error!</h3>
+    <main role="main" class="container">
+        <div style="display:none;" id="error" class="card bg-danger">
+            <div class="card-header">
+                Error!
+            </div>
+            <div class="card-body" id="errors">
+            </div>
         </div>
-        <div class="panel-body" id="errors">
-        </div>
-    </div>
-    <h1><i class="fa fa-phone-square" aria-hidden="true"></i> Conference Room {{conference}} <small>{{elapsedHMS starmon_timestamp end_timestamp}}</small></h1>
-    <h4>Began {{prettyTime starmon_timestamp}}</h4>
-    <p>
-        <div class="input-group input-group-small">
-            <span class="input-group-addon">
-                <i class="fa fa-share-square-o" aria-hidden="true"></i>
-            </span>
-            <input type="text" id="permalink" value="{{confShareUrl}}" class="form-control" readonly>
-        </div>
-    </p>
+        <h1><i class="fa fa-phone-square" aria-hidden="true"></i> Conference Room {{conference}} <small>{{elapsedHMS starmon_timestamp end_timestamp}}</small></h1>
+        <h4>Began {{prettyTime starmon_timestamp}}</h4>
+        <p>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="share-addon"><i class="fa fa-share-square-o" aria-hidden="true"></i></span>
+                </div>
+                <input type="text" readonly class="form-control" value="{{confShareUrl}}" id="permalink" aria-label="Permalink" aria-describedby="share-addon">
+            </div>
+        </p>
+        {{#if end_timestamp}}
+        <p>
+            <div class="card bg-default">
+                <div class="card-body">
+                    <h1>This conference has ended</h1>
+                    <p>Conference began on {{prettyTime starmon_timestamp}} and ended {{prettyTime end_timestamp}}. </p>
+                    <p>The conference was {{elapsedTime starmon_timestamp end_timestamp}} long. </p>
+                    <p><strong>Total callers:</strong> {{total_member_count}}.</p>
+                </div>
+            </div>
+        </p>
+        {{else}}
+        <div class="card bg-default">
+            <div class="card-header">
+                Members
+                <span class="badge badge-secondary pull-right">{{active_member_count}} active members</span>
 
-    {{#if end_timestamp}}
-    <h3>This conference has ended</h3>
-    <div class="well">
-        Conference began on {{prettyTime starmon_timestamp}} and ended {{prettyTime end_timestamp}}. The conference was {{elapsedTime starmon_timestamp end_timestamp}} long.<br />Total calls: {{total_member_count}}.
-    </div>
-    {{else}}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Members
-                <span class="badge pull-right">{{active_member_count}} active members</span>
-            </h3>
-        </div>
-        <div class="panel-body">
-            {{#if active_member_count}}
-            {{#each active_members}}
-            <div class="modal" id="member_{{_id}}">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title">{{calleridname}} - {{calleridnum}}</h4>
-                        </div>
-                        <div class="modal-body">
-                            {{{amiblock this}}}
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" data-dismiss="modal" class="btn">Close</a>
+            </div>
+            <div class="card-body">
+                {{#if active_member_count}}
+                {{#each active_members}}
+                <div class="modal" tabindex="-1" role="dialog" id="member_{{_id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{calleridname}} - {{calleridnum}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{{amiblock this}}}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {{/each}}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Talking</th>
-                            <th>Caller ID Name</th>
-                            <th>Caller ID Number</th>
-                            <th>Last Spoke</th>
-                            <th>Time Speaking</th>
-                            <th>Joined</th>
-                            <th>Present</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each active_members}}
-                        <tr data-toggle="member_{{_id}}" class="talking_{{talking}}">
-                            <td>
-                                {{#if talking}}
-                                <i class="fa fa-circle"></i>
-                                {{else}}
-                                <i class="fa fa-circle-o"></i>
-                                {{/if}}
-                            </td>
-                            <td>{{calleridname}}</td>
-                            <td>{{calleridnum}}</td>
-                            <td>{{reactiveTime speak_timestamp}}</td>
-                            <td>{{timeSpeaking}}</td>
-                            <td>{{reactiveTime starmon_timestamp}}</td>
-                            <td>{{elapsedHMS starmon_timestamp leave_timestamp}}</td>
-                            <td data-conference="{{conference}}" data-channel="{{channel}}" data-meetme="{{meetme}}" data-usernum="{{usernum}}"><a class="conf-kick-member">[<i class="fa fa-ban" aria-hidden="true"></i> Kick]</a> - <a class="conf-mute-member">[<i class="fa fa-microphone-slash" aria-hidden="true"></i> Mute]</a> - <a onmousedown="$('#member_{{_id}}').modal({show:true});">[Info]</a></td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-            {{else}}
-            <strong>No active members in conference room.</strong>
-            {{/if}}
-        </div>
-    </div>
-    {{/if}}
-    {{#if hangup_member_count}}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Hangups
-                <span class="badge pull-right">{{hangup_member_count}} total</span>
-            </h3>
-        </div>
-        <div class="panel-body">
-            {{#each hangup_members}}
-            <div class="modal" id="member_{{_id}}">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title">{{calleridname}} - {{calleridnum}}</h4>
-                        </div>
-                        <div class="modal-body">
-                            {{{amiblock this}}}
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" data-dismiss="modal" class="btn">Close</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/each}}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Caller ID Name</th>
-                            <th>Caller ID Number</th>
-                            <th>Last Spoke</th>
-                            <th>Time Speaking</th>
-                            <th>Joined</th>
-                            <th>Left</th>
-                            <th>Present</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {{#each hangup_members}}
-                        <tr>
-
-                            <td>{{calleridname}}</td>
-                            <td>{{calleridnum}}</td>
-                            <td>{{reactiveTime speak_timestamp}}</td>
-                            <td>{{hms talkTime}}</td>
-                            <td>{{reactiveTime starmon_timestamp}}</td>
-                            <td>{{reactiveTime leave_timestamp}}</td>
-                            <td>{{elapsedHMS starmon_timestamp leave_timestamp}}</td>
-                            <td><a onmousedown="$('#member_{{_id}}').modal({show:true});">[Info]</a></td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    </div>
-    {{/if}}
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Message</th>
-                    <th width="350px">Timestamp</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each event}}
-                <tr data-toggle="member_{{_id}}" class="talking_{{talking}}">
-                    <td>
-                        {{message}}
-                    </td>
-                    <td>{{prettyTime starmon_timestamp}} ({{reactiveTime starmon_timestamp}})</td>
-                </tr>
                 {{/each}}
-
-            </tbody>
-        </table>
-    </div>
-
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Talking</th>
+                                <th>Caller ID Name</th>
+                                <th>Caller ID Number</th>
+                                <th>Last Spoke</th>
+                                <th>Time Speaking</th>
+                                <th>Joined</th>
+                                <th>Present</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each active_members}}
+                            <tr data-toggle="member_{{_id}}" class="talking_{{talking}}">
+                                <td>
+                                    {{#if talking}}
+                                    <i class="fa fa-circle"></i>
+                                    {{else}}
+                                    <i class="fa fa-circle-o"></i>
+                                    {{/if}}
+                                </td>
+                                <td>{{calleridname}}</td>
+                                <td>{{calleridnum}}</td>
+                                <td>{{reactiveTime speak_timestamp}}</td>
+                                <td>{{timeSpeaking}}</td>
+                                <td>{{reactiveTime starmon_timestamp}}</td>
+                                <td>{{elapsedHMS starmon_timestamp leave_timestamp}}</td>
+                                <td data-conference="{{conference}}" data-channel="{{channel}}" data-meetme="{{meetme}}" data-usernum="{{usernum}}"><a href="#" class="btn btn-sm btn-danger conf-kick-member"><i class="fa fa-ban" aria-hidden="true"></i> Kick</a> <a href="#" class="btn btn-sm btn-secondary conf-mute-member"><i class="fa fa-microphone-slash" aria-hidden="true"></i> Mute</a> <a href="#" class="btn btn-sm btn-warning" onmousedown="$('#member_{{_id}}').modal({show:true});">Info</a></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                {{else}}
+                <strong>No active members in conference room.</strong>
+                {{/if}}
+            </div>
+        </div>
+        {{/if}}
+        {{#if hangup_member_count}}
+        <div class="card bg-default">
+            <div class="card-header">
+                Hangups
+                <span class="badge badge-secondary pull-right">{{hangup_member_count}} total</span>
+            </div>
+            <div class="card-body">
+                {{#each hangup_members}}
+                <div class="modal" tabindex="-1" role="dialog" id="member_{{_id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{calleridname}} - {{calleridnum}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{{amiblock this}}}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Caller ID Name</th>
+                                <th>Caller ID Number</th>
+                                <th>Last Spoke</th>
+                                <th>Time Speaking</th>
+                                <th>Joined</th>
+                                <th>Left</th>
+                                <th>Present</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each hangup_members}}
+                            <tr>
+                                <td>{{calleridname}}</td>
+                                <td>{{calleridnum}}</td>
+                                <td>{{reactiveTime speak_timestamp}}</td>
+                                <td>{{hms talkTime}}</td>
+                                <td>{{reactiveTime starmon_timestamp}}</td>
+                                <td>{{reactiveTime leave_timestamp}}</td>
+                                <td>{{elapsedHMS starmon_timestamp leave_timestamp}}</td>
+                                <td><a class="btn btn-sm btn-primary" href="#" onmousedown="$('#member_{{_id}}').modal({show:true});">Info</a></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each event}}
+                    <tr data-toggle="member_{{_id}}" class="talking_{{talking}}">
+                        <td>
+                            {{message}}
+                        </td>
+                        <td>{{prettyTime starmon_timestamp}} ({{reactiveTime starmon_timestamp}})</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </main>
 </template>

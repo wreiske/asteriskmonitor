@@ -1,84 +1,87 @@
 <template name="conferences">
-  <div style="display:none;" id="error" class="panel panel-danger">
-    <div class="panel-heading">
-      <h3 class="panel-title">Error!</h3>
-    </div>
-    <div class="panel-body" id="errors">
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Active Conferences
-        <span class="badge pull-right">{{active_conf_count}}</span>
-      </h3>
-    </div>
-    <div class="panel-body">
-      {{#if active_conf_count}}
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th width="100px">Options</th>
-              <th>Conference</th>
-              <th>Members</th>
-              <th>Started</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each active_conference}}
-            <tr data-toggle="bridge_{{_id}}">
-              <td><a class="btn btn-sm btn-primary" href="/conference/{{bridgeuniqueid}}">View</a></td>
-              <td>{{conference}}</td>
-              <td>{{memberTotal}}</td>
-              <td>{{reactiveTime}}</td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
+  <main role="main" class="container">
+    <div style="display:none;" id="error" class="card bg-danger">
+      <div class="card-header">
+        Error!
       </div>
-      {{else}}
-      <strong>No Active Conferences</strong>
-      {{/if}}
-    </div>
-  </div>
-
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Completed Conferences
-        <span class="badge pull-right">{{completed_conf_count}}</span>
-      </h3>
-    </div>
-    <div class="panel-body">
-      {{#if completed_conf_count}}
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th width="100px">Options</th>
-              <th>Conference</th>
-              <th>Started</th>
-              <th>Ended</th>
-              <th>Total Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each completed_conference}}
-            <tr data-toggle="bridge_{{_id}}">
-              <td><a class="btn btn-sm btn-primary" href="/conference/{{bridgeuniqueid}}">View</a></td>
-              <td>{{conference}}</td>
-              <td>{{reactiveTime}}</td>
-              <td>{{reactiveTime end_timestamp}}</td>
-              <td>{{elapsedHMS starmon_timestamp end_timestamp}}</td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
+      <div class="card-body" id="errors">
       </div>
-      {{else}}
-      <strong>No Completed Conferences</strong>
-      {{/if}}
     </div>
-  </div>
+    <h1>Conferences</h1>
+    <p>
+      <div class="card bg-default">
+        <div class="card-header">
+          Active Conferences
+          <span class="badge badge-secondary pull-right">{{active_conf_count}}</span>
+        </div>
+        <div class="card-body">
+          {{#if active_conf_count}}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th width="100px">Options</th>
+                  <th>Conference</th>
+                  <th>Members</th>
+                  <th>Started</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each active_conference}}
+                <tr data-toggle="bridge_{{_id}}">
+                  <td><a class="btn btn-sm btn-primary" href="/conference/{{bridgeuniqueid}}">View</a></td>
+                  <td>{{conference}}</td>
+                  <td>{{memberTotal}}</td>
+                  <td>{{reactiveTime}}</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+          {{else}}
+          <strong>No Active Conferences</strong>
+          {{/if}}
+        </div>
+      </div>
+    </p>
+    <p>
+      <div class="card bg-default">
+        <div class="card-header">
+          Completed Conferences
+          <span class="badge badge-secondary pull-right">{{completed_conf_count}}</span>
+
+        </div>
+        <div class="card-body">
+          {{#if completed_conf_count}}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th width="100px">Options</th>
+                  <th>Conference</th>
+                  <th>Started</th>
+                  <th>Ended</th>
+                  <th>Total Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each completed_conference}}
+                <tr data-toggle="bridge_{{_id}}">
+                  <td><a class="btn btn-sm btn-primary" href="/conference/{{bridgeuniqueid}}">View</a></td>
+                  <td>{{conference}}</td>
+                  <td>{{reactiveTime}}</td>
+                  <td>{{reactiveTime end_timestamp}}</td>
+                  <td>{{elapsedHMS starmon_timestamp end_timestamp}}</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+          {{else}}
+          <strong>No Completed Conferences</strong>
+          {{/if}}
+        </div>
+      </div>
+    </p>
+  </main>
 </template>

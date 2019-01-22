@@ -9,27 +9,14 @@
 </body>
 <template name="layout">
     {{>header}}
-    <div id="wrap">
-        <div class="container">
-            {{>warnings}}
-            {{>yield}}
-        </div>
-    </div>
+    {{>warnings}}
+    {{>yield}}
     {{>footer}}
 </template>
 <template name="loading">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="main">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Loading..</h3>
-                    </div>
-                    <div class="panel-body">
-                        Please Wait
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+        </svg>
     </div>
 </template>
