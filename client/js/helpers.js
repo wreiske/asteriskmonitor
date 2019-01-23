@@ -1,3 +1,5 @@
+const libphonenumber = require('libphonenumber-js');
+
 Handlebars.registerHelper('amiblock', function (context) {
     var html = '<form class="form-horizontal" role="form">';
 
@@ -69,4 +71,18 @@ Template.registerHelper('prettyTime', function (time = Date.now()) {
 
 Handlebars.registerHelper('currentYear', function () {
     return moment(TimeSync.serverTime()).year();
+});
+
+// TODO: Add administrator option to set local ("US", etc..)
+Handlebars.registerHelper('formatPhoneNumber', function (phone) {
+    return libphonenumber.parsePhoneNumberFromString(phone, "US").formatNational();
+});
+
+Handlebars.registerHelper('getPhoneNumberURI', function (phone) {
+    const phoneNumber = libphonenumber.parsePhoneNumberFromString(phone, "US");
+    if (phoneNumber && phoneNumber.isValid()) {
+        return libphonenumber.parsePhoneNumberFromString(phone, "US").getURI();
+    } else {
+        return 'tel:' + phone;
+    }
 });

@@ -23,7 +23,8 @@
                 <div class="card-body">
                     <h1>This conference has ended</h1>
                     <p>Conference began on {{prettyTime starmon_timestamp}} and ended {{prettyTime end_timestamp}}. </p>
-                    <p>The conference was {{elapsedTime starmon_timestamp end_timestamp}} long. </p>
+                    <p>The conference was {{elapsedTime starmon_timestamp end_timestamp}} long.</p>
+                    <p>The top speaking caller was {{topCaller.calleridname}} <a href="{{getPhoneNumberURI topCaller.calleridnum}}">{{formatPhoneNumber topCaller.calleridnum}}</a></p>
                     <p><strong>Total callers:</strong> {{total_member_count}}.</p>
                 </div>
             </div>
@@ -42,7 +43,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">{{calleridname}} - {{calleridnum}}</h5>
+                                <h5 class="modal-title">{{calleridname}} - {{formatPhoneNumber calleridnum}}</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -82,7 +83,7 @@
                                     {{/if}}
                                 </td>
                                 <td>{{calleridname}}</td>
-                                <td>{{calleridnum}}</td>
+                                <td><a href="{{getPhoneNumberURI calleridnum}}">{{formatPhoneNumber calleridnum}}</a></td>
                                 <td>{{reactiveTime speak_timestamp}}</td>
                                 <td>{{timeSpeaking}}</td>
                                 <td>{{reactiveTime starmon_timestamp}}</td>
@@ -111,7 +112,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">{{calleridname}} - {{calleridnum}}</h5>
+                                <h5 class="modal-title">{{calleridname}} - <a href="{{getPhoneNumberURI calleridnum}}">{{formatPhoneNumber calleridnum}}</a></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -144,7 +145,7 @@
                             {{#each hangup_members}}
                             <tr>
                                 <td>{{calleridname}}</td>
-                                <td>{{calleridnum}}</td>
+                                <td><a href="{{getPhoneNumberURI calleridnum}}">{{formatPhoneNumber calleridnum}}</a></td>
                                 <td>{{reactiveTime speak_timestamp}}</td>
                                 <td>{{hms talkTime}}</td>
                                 <td>{{reactiveTime starmon_timestamp}}</td>

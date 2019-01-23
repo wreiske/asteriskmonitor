@@ -57,6 +57,17 @@ Template.ConferenceSingle.helpers({
         $exists: true
       }
     }).count();
+  },
+  topCaller: function () {
+    return ConferenceMembers.find({
+      'leave_timestamp': {
+        $exists: true
+      }
+    }, {
+      sort: {
+        talkTime: -1
+      }
+    }).fetch()[0];
   }
 });
 

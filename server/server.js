@@ -1,4 +1,5 @@
 const asterisk = require('asterisk-manager');
+const libphonenumber = require('libphonenumber-js');
 
 /* TODO: Remove ability for users to change profile.admin */
 Meteor.users.allow({
@@ -463,7 +464,10 @@ function StartAMI() {
                 ConferenceMembers.insert(evt);
 
                 // Push a message to the conference events
-                const callerInfo = `${evt.calleridname} ${evt.calleridnum}`.trim();
+                // TODO: Add administrator option to set local ("US", etc..)
+                const formatedPhone = libphonenumber.parsePhoneNumberFromString(evt.calleridnum, "US").formatNational();
+
+                const callerInfo = `${evt.calleridname} ${formatedPhone}`.trim();
                 ConferenceEvents.insert({
                     'message': `${callerInfo} joined the conference.`,
                     'event': 'join',
