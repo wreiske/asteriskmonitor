@@ -28,7 +28,8 @@ Template.ConferenceSingle.helpers({
       }
     }, {
       sort: {
-        starmon_timestamp: -1
+        speak_timestamp: -1,
+        calleridname: 1
       }
     });
   },
@@ -49,7 +50,7 @@ Template.ConferenceSingle.helpers({
       }
     }, {
       sort: {
-        starmon_timestamp: -1
+        calleridname: 1
       }
     });
   },
