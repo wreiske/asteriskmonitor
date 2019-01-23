@@ -26,15 +26,9 @@ Meteor.publish('userInfo', function () {
     }
 });
 
-Meteor.publish('directory', function () {
+Meteor.publish('Directory', function () {
     if (this.userId) {
-        return Meteor.users.find({}, {
-            fields: {
-                emails: 1,
-                profile: 1,
-                admin: 1
-            }
-        });
+        return Directory.find();
     } else {
         this.ready();
     }
@@ -129,7 +123,136 @@ Meteor.startup(function () {
         secret: GlobalSettings.Google.secret
     });
     Meteor.methods({
+        'Directory-UpdateAllCID': function () {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
+            // Run through all the old CID information and update it with new if we have it.
+            const dirPhones = Directory.find().fetch();
+            _.each(dirPhones, function (item) {
+                console.log(item);
+                AmiStatus.update({
+                    calleridnum: item.phoneNumber
+                }, {
+                    $set: {
+                        calleridname: item.name
+                    }
+                }, {
+                    multi: true
+                });
+                Queue.update({
+                    calleridnum: item.phoneNumber
+                }, {
+                    $set: {
+                        calleridname: item.name
+                    }
+                }, {
+                    multi: true
+                });
+                ConferenceMembers.update({
+                    calleridnum: item.phoneNumber
+                }, {
+                    $set: {
+                        calleridname: item.name
+                    }
+                }, {
+                    multi: true
+                });
+                AmiLog.update({
+                    calleridnum: item.phoneNumber
+                }, {
+                    $set: {
+                        calleridname: item.name
+                    }
+                }, {
+                    multi: true
+                });
+            });
+            return 'Updated all Caller ID names.';
+        },
+        'Directory-ImportCSV': function (csvObject) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
+            check(csvObject, Match.Any);
+            // Directory.remove({});
+            // TODO: Add checking on rows / cols == null...
+            // TODO: this was added quick n dirty under a time crunch
+
+            _.each(csvObject, function (item) {
+                check(item, Match.ObjectIncluding({
+                    Name: String,
+                    Home: String,
+                    Work: String,
+                    Cell: String
+                }));
+
+                // if Last, First make it First Last
+                if (item.Name.indexOf(',') > -1) {
+                    const splitName = item.Name.split(',');
+                    item.Name = `${splitName[1].trim()} ${splitName[0].trim()}`.trim();
+                    console.log(item.Name);
+                }
+
+                // Add Home Phone for user
+                if (item.Home != "") {
+                    Directory.update({
+                        "phoneNumber": item.Home
+                    }, {
+                        $set: {
+                            "name": item.Name,
+                            "phoneNumber": item.Home,
+                            "type": "home",
+                            "starmon_timestamp": Date.now(),
+                            "addedBy": Meteor.userId()
+                        }
+                    }, {
+                        upsert: true
+                    });
+                }
+                // Add Work Phone for user
+                if (item.Work != "") {
+                    Directory.update({
+                        "phoneNumber": item.Work
+                    }, {
+                        $set: {
+                            "name": item.Name,
+                            "phoneNumber": item.Work,
+                            "type": "work",
+                            "starmon_timestamp": Date.now(),
+                            "addedBy": Meteor.userId()
+                        }
+                    }, {
+                        upsert: true
+                    });
+                }
+                // Add Cell Phone for user
+                if (item.Cell != "") {
+                    Directory.update({
+                        "phoneNumber": item.Cell
+                    }, {
+                        $set: {
+                            "name": item.Name,
+                            "phoneNumber": item.Cell,
+                            "type": "cell",
+                            "starmon_timestamp": Date.now(),
+                            "addedBy": Meteor.userId()
+                        }
+                    }, {
+                        upsert: true
+                    });
+                }
+
+                console.log(item);
+            });
+
+            return 'Success!';
+
+        },
         save_ami: function (host, port, user, pass) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
             check(host, String);
             check(port, String);
             check(user, String);
@@ -191,10 +314,16 @@ Meteor.startup(function () {
             }
         },
         StartAMI: function () {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
             // .. do other stuff ..
             return 'baz';
         },
         meetme_mute_user: function (bridgeuniqueid, bridge, user_id) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
             var amiserver = ServerSettings.find({
                 'module': 'ami'
             }).fetch()[0];
@@ -223,6 +352,9 @@ Meteor.startup(function () {
             }
         },
         meetme_kick_user: function (bridgeuniqueid, bridge, user_id) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
             var amiserver = ServerSettings.find({
                 'module': 'ami'
             }).fetch()[0];
@@ -251,6 +383,9 @@ Meteor.startup(function () {
         },
         // TODO: Make generic...
         conference_mute_user: function (bridgeuniqueid, bridge, channel) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
             check(bridge, Number);
             check(channel, String);
 
@@ -282,6 +417,9 @@ Meteor.startup(function () {
             }
         },
         conference_kick_user: function (bridgeuniqueid, bridge, channel) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
             var amiserver = ServerSettings.find({
                 'module': 'ami'
             }).fetch()[0];
@@ -373,6 +511,17 @@ Accounts.onCreateUser(function (options, user) {
     return user;
 });
 
+function CIDLookup(name, phone) {
+    const resDirectory = Directory.findOne({
+        phoneNumber: phone
+    });
+    if (resDirectory) {
+        return resDirectory.name;
+    } else {
+        return name;
+    }
+}
+
 function emailUsername(emailAddress) {
     return emailAddress.match(/^(.+)@/)[1];
 }
@@ -415,6 +564,7 @@ function StartAMI() {
             //
             ami.on('join', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
+                evt.calleridname = CIDLookup(evt.calleridname, evt.calleridnum);
                 Queue.insert(evt);
             }));
 
@@ -450,7 +600,7 @@ function StartAMI() {
 
             ami.on('confbridgejoin', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
-
+                evt.calleridname = CIDLookup(evt.calleridname, evt.calleridnum);
                 // Update Conference Users Count
                 Conferences.update({
                     'bridgeuniqueid': evt.bridgeuniqueid
@@ -467,7 +617,7 @@ function StartAMI() {
                 // TODO: Add administrator option to set local ("US", etc..)
                 const formatedPhone = libphonenumber.parsePhoneNumberFromString(evt.calleridnum, "US").formatNational();
 
-                const callerInfo = `${evt.calleridname} ${formatedPhone}`.trim();
+                const callerInfo = `${CIDLookup(evt.calleridname, evt.calleridnum)} ${formatedPhone}`.trim();
                 ConferenceEvents.insert({
                     'message': `${callerInfo} joined the conference.`,
                     'event': 'join',
@@ -478,7 +628,7 @@ function StartAMI() {
 
             ami.on('confbridgeleave', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
-
+                evt.calleridname = CIDLookup(evt.calleridname, evt.calleridnum);
                 // Update Conference Users Count
                 Conferences.update({
                     'bridgeuniqueid': evt.bridgeuniqueid
@@ -499,7 +649,7 @@ function StartAMI() {
                 });
 
                 // Post leave message to the conf
-                const callerInfo = `${evt.calleridname} ${evt.calleridnum}`.trim();
+                const callerInfo = `${CIDLookup(evt.calleridname, evt.calleridnum)} ${evt.calleridnum}`.trim();
                 ConferenceEvents.insert({
                     'message': `${callerInfo} left the conference.`,
                     'event': 'leave',
@@ -526,6 +676,7 @@ function StartAMI() {
 
             ami.on('confbridgestart', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
+
                 evt.memberTotal = 0;
                 Conferences.insert(evt);
                 ConferenceEvents.insert({
@@ -541,7 +692,7 @@ function StartAMI() {
             //
             ami.on('meetmejoin', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
-
+                evt.calleridname = CIDLookup(evt.calleridname, evt.calleridnum);
                 // Check if this meet me has started yet.. 
                 // meetme doesn't have a "Start" event like confbridge does
                 let conf = Conferences.findOne({
@@ -579,7 +730,7 @@ function StartAMI() {
                 ConferenceMembers.insert(evt);
 
                 // Push a message to the conference events
-                const callerInfo = `${evt.calleridname} ${evt.calleridnum}`.trim();
+                const callerInfo = `${CIDLookup(evt.calleridname, evt.calleridnum)} ${evt.calleridnum}`.trim();
                 ConferenceEvents.insert({
                     'message': `${callerInfo} joined the conference.`,
                     'event': 'join',
@@ -616,6 +767,8 @@ function StartAMI() {
 
             ami.on('meetmeleave', Meteor.bindEnvironment(function (evt) {
                 evt.starmon_timestamp = Date.now();
+                evt.calleridname = CIDLookup(evt.calleridname, evt.calleridnum);
+
                 const conf = Conferences.findOne({
                     'conference': evt.meetme,
                     end_timestamp: {
@@ -643,7 +796,7 @@ function StartAMI() {
                     });
 
                     // Post leave message to the conf
-                    const callerInfo = `${evt.calleridname} ${evt.calleridnum}`.trim();
+                    const callerInfo = `${CIDLookup(evt.calleridname, evt.calleridnum)} ${evt.calleridnum}`.trim();
                     ConferenceEvents.insert({
                         'message': `${callerInfo} left the conference.`,
                         'event': 'leave',

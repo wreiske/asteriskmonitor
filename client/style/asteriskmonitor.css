@@ -161,3 +161,7 @@ code {
 .toast-warning {
     background-color: #ffc400;
 }
+
+#import_csv_wrap {
+    display: none;
+}

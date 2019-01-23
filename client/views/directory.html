@@ -1,0 +1,61 @@
+<template name="directory">
+  <main role="main" class="container">
+    <p>
+      <button id="show_import" class="btn btn-primary"><i class="fa fa-plus"></i> Add Number</button>
+    </p>
+    <p id="import_csv_wrap">
+      <div class="card bg-default">
+        <div class="card-header">
+          <i class="fa fa-cloud-upload" aria-hidden="true"></i> Add / Import Numbers
+        </div>
+        <div class="card-body">
+          <p>Currently only CSV importing of numbers is supported. (But adding one by one will be supported VERY soon.)</p>
+          The CSV must contain the following columns:
+          <pre>"Name","Work","Cell","Home"</pre>
+          <div class="form-group">
+            <label for="csv">CSV File</label>
+            <textarea class="form-control" id="csv" rows="3"></textarea>
+          </div>
+          <button class="btn btn-success" id="import_csv"><i class="fa fa-plus"></i> Import</button>
+          <button class="btn btn-primary" id="sync_caller_names"><i class="fa fa-refresh"></i> Sync Caller ID Names</button>
+        </div>
+      </div>
+    </p>
+    <p>
+      <div class="card bg-default">
+        <div class="card-header">
+          <i class="fa fa-list-alt" aria-hidden="true"></i> Directory
+          <span class="badge badge-secondary pull-right">{{numberCount}}</span>
+        </div>
+        <div class="card-body">
+          {{#if numberCount}}
+          <div class="table-responsive">
+            <table class="table table-sm table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Type</th>
+                  <th>Added</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each directory_listing}}
+                <tr>
+                  <td class="p-2">{{name}}<br /><small>{{getPhoneNumberCityState phoneNumber}}</small></td>
+                  <td class="p-2"><a class="btn btn-sm btn-secondary" href="{{getPhoneNumberURI phoneNumber}}">{{{phoneTypeIcon phoneNumber}}} {{formatPhoneNumber phoneNumber}}</a></td>
+                  <td class="p-2">{{type}}</td>
+                  <td class="p-2">{{reactiveTime starmon_timestamp}}</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+          {{else}}
+          <strong>No numbers in the directory</strong>
+          {{/if}}
+        </div>
+      </div>
+    </p>
+  </main>
+</template>
