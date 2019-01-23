@@ -160,10 +160,9 @@
                       </div>
                       {{else}}
                       <div class="card-body">
-                        <strong>No active members in conference room.</strong>
+                        <p><strong>No active members in conference room.</strong></p>
                       </div>
                        {{/if}}
-
                   </div>
                   {{/if}}
                   {{#if hangup_member_count}}
@@ -269,13 +268,10 @@
                     <small >{{prettyDateShort starmon_timestamp}} {{prettyTimeShort starmon_timestamp}}</small>
                   </div>
                   <p class="mb-0"><strong>{{message}}</strong></p>
-
-
                 </div>
                 {{/each}}
               </div>
             </div>
-
           </div>
         </div>
     </main>
