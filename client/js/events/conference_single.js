@@ -15,9 +15,11 @@ Template.ConferenceSingle.helpers({
     if (this.talking) {
       talkCounter = this.talkTime + Math.abs((moment(TimeSync.serverTime()) - this.speak_timestamp) / 1000);
     }
-    return moment().startOf('day')
-      .seconds(talkCounter)
-      .format('H:mm:ss');
+    if (talkCounter) {
+      return moment().startOf('day')
+        .seconds(talkCounter)
+        .format('H:mm:ss');
+    }
   },
   active_members: function () {
     return ConferenceMembers.find({
