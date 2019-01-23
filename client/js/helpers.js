@@ -92,3 +92,26 @@ Handlebars.registerHelper('getPhoneNumberURI', function (phone) {
         return 'tel:' + phone;
     }
 });
+
+Handlebars.registerHelper('phoneTypeIcon', function (phone) {
+    const phoneNumber = libphonenumber.parsePhoneNumberFromString(phone, "US");
+    if (phoneNumber && phoneNumber.isValid()) {
+        switch (phoneNumber.getType()) {
+            case "MOBILE":
+                return '<i class="fa fa-mobile"></i>';
+                break;
+            case "FIXED_LINE_OR_MOBILE":
+                // maybe not assume mobile?
+                return '<i class="fa fa-mobile"></i>';
+                break;
+            case "VOIP":
+                return '<i class="fa fa-phone-square"></i>';
+                break;
+            default:
+                return '<i class="fa fa-phone"></i>';
+                break;
+        }
+    } else {
+        return '<i class="fa fa-phone"></i>'
+    }
+});
