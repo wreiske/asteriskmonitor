@@ -1,12 +1,31 @@
 <template name="footer">
-    <footer class="footer bg-dark">
-        <div class="container">
-          <span class="text-muted">
-            <span class="fa fa-asterisk"></span>monitor - Realtime Asterisk Web Monitor &copy; {{currentYear}} <a href="https://www.mieweb.com/">Medical Informatics Engineering</a> &dash; <a href="https://github.com/wreiske/asteriskmonitor" target="_blank"><img src="https://img.shields.io/github/stars/wreiske/asteriskmonitor.svg"></a>
-            {{#if currentUser}} 
-                {{#if isadmin}} &dash; <a class="btn btn-sm btn-primary" href="/admin">Administration Panel</a>{{/if}} 
-            {{/if}}
+  <footer class="footer bg-dark">
+    <div class="container-fluid">
+      <div class="d-flex w-100 justify-content-between">
+        <span class="text-muted">
+          <span class="fa fa-asterisk mr-1"></span> monitor -
+          <span class="d-none d-lg-inline">Realtime Asterisk Web Monitor</span> &copy; {{currentYear}}
+          <a href="https://www.mieweb.com/">
+            <span class="d-none d-lg-inline">Medical Informatics Engineering</span>
+            <span class="d-inline d-lg-none">MIE</span>
+          </a>
+          <span class="d-none d-lg-inline">
+             &dash;
+            <a href="https://github.com/wreiske/asteriskmonitor" target="_blank">
+              <img src="https://img.shields.io/github/stars/wreiske/asteriskmonitor.svg">
+            </a>
           </span>
-        </div>
-      </footer>
+        </span>
+        {{#if currentUser}}
+          {{#if isadmin}}
+          <div>
+            <a class="btn btn btn-primary" href="/admin">
+              Admin<span class="d-none d-lg-inline">istration Panel</span>
+            </a>
+          </div>
+          {{/if}}
+        {{/if}}
+      </div>
+    </div>
+  </footer>
 </template>
