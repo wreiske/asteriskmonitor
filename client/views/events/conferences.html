@@ -1,5 +1,5 @@
 <template name="conferences">
-  <main role="main" class="container-fluid">
+  <main role="main" class="animated container-fluid">
     <div style="display:none;" id="error" class="card bg-danger">
       <div class="card-header">
         Error!
@@ -59,7 +59,7 @@
             {{/each}}
           </div>
           {{else}}
-          <strong>No Active Conferences</strong>
+          <p><strong>No Active Conferences</strong></p>
           {{/if}}
       </div>
       <div class="card bg-default my-3">
@@ -109,7 +109,7 @@
             {{/each}}
           </div>
           {{else}}
-          <strong>No Completed Conferences</strong>
+          <p><strong>No Completed Conferences</strong></p>
           {{/if}}
       </div>
   </main>
