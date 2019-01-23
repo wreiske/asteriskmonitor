@@ -130,7 +130,6 @@ Meteor.startup(function () {
             // Run through all the old CID information and update it with new if we have it.
             const dirPhones = Directory.find().fetch();
             _.each(dirPhones, function (item) {
-                console.log(item);
                 AmiStatus.update({
                     calleridnum: item.phoneNumber
                 }, {
@@ -191,7 +190,6 @@ Meteor.startup(function () {
                 if (item.Name.indexOf(',') > -1) {
                     const splitName = item.Name.split(',');
                     item.Name = `${splitName[1].trim()} ${splitName[0].trim()}`.trim();
-                    console.log(item.Name);
                 }
 
                 // Add Home Phone for user
@@ -242,11 +240,9 @@ Meteor.startup(function () {
                         upsert: true
                     });
                 }
-
-                console.log(item);
             });
 
-            return 'Success!';
+            return 'Successfully imported CSV into Directory!';
 
         },
         save_ami: function (host, port, user, pass) {
