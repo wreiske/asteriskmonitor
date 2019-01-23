@@ -95,10 +95,10 @@
                             <tr data-toggle="member_{{_id}}" class="talking_{{talking}}">
                               <td class="text-center p-2">
                                 {{#if talking}}
-                                <i class="fa fa-bullhorn text-success"></i> {{else}}
+                                <i class="fa fa fa-volume-control-phone text-success"></i> {{else}}
                                 <i class="fa fa-circle-o text-default"></i> {{/if}}
                               </td>
-                              <td class="p-2">{{calleridname}}</td>
+                              <td class="p-2">{{calleridname}}<br /><small>{{getPhoneNumberCityState calleridnum}}</small></td>
                               <td class="p-2"><a class="btn btn-sm btn-secondary" href="{{getPhoneNumberURI calleridnum}}">{{{phoneTypeIcon calleridnum}}} {{formatPhoneNumber calleridnum}}</a></td>
                               <td class="p-2">{{reactiveTime speak_timestamp}}</td>
                               <td class="p-2">{{timeSpeaking}}</td>
@@ -135,6 +135,7 @@
                                     <button href="#" class="btn btn-link pt-0" onmousedown="$('#member_{{_id}}').modal({show:true});">
                                       <i class="fa fa-info-circle" aria-hidden="true"></i>
                                     </button>
+                                    <br /><small>{{getPhoneNumberCityState calleridnum}}</small>
 
                                   </h5>
                                   <h6>

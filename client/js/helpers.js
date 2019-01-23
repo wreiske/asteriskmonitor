@@ -1,5 +1,7 @@
 const libphonenumber = require('libphonenumber-js');
 
+const _areaCodes = require('areacodes/lib/data.json');
+
 Handlebars.registerHelper('amiblock', function (context) {
     var html = '<form class="form-horizontal" role="form">';
 
@@ -77,6 +79,20 @@ Template.registerHelper('prettyTimeShort', function (time = Date.now()) {
 
 Handlebars.registerHelper('currentYear', function () {
     return moment(TimeSync.serverTime()).year();
+});
+
+// TODO: Make i18n....
+Handlebars.registerHelper('getPhoneNumberCityState', function (phone) {
+    phone = phone.replace(/^\+?[10]/, '').replace(/[^0-9]/g, '').match(/^([0-9]{3})/);
+    if (!phone) {
+        return 'Unknown';
+    }
+    phone = phone[1];
+    if (_areaCodes.hasOwnProperty(phone)) {
+        return `${_areaCodes[phone].city}, ${_areaCodes[phone].state}`.toUpperCase();
+
+    }
+    return 'Unknown';
 });
 
 // TODO: Add administrator option to set local ("US", etc..)
