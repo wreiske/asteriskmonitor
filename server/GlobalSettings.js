@@ -1,3 +1,4 @@
+// TODO: This should really be in settings.json!
 GlobalSettings = {
     Google: {
         clientId: "CHANGE_ME",
