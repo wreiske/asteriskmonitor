@@ -68,6 +68,12 @@ copyToClipboard = str => {
 Template.registerHelper('prettyTime', function (time = Date.now()) {
     return moment(time).format('MMMM Do YYYY, h:mm:ss a');
 });
+Template.registerHelper('prettyDateShort', function (time = Date.now()) {
+    return moment(time).format('MMM Do YYYY');
+});
+Template.registerHelper('prettyTimeShort', function (time = Date.now()) {
+    return moment(time).format('h:mm:ss a');
+});
 
 Handlebars.registerHelper('currentYear', function () {
     return moment(TimeSync.serverTime()).year();
