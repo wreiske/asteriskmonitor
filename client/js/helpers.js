@@ -83,16 +83,19 @@ Handlebars.registerHelper('currentYear', function () {
 
 // TODO: Make i18n....
 Handlebars.registerHelper('getPhoneNumberCityState', function (phone) {
-    phone = phone.replace(/^\+?[10]/, '').replace(/[^0-9]/g, '').match(/^([0-9]{3})/);
-    if (!phone) {
-        return 'Unknown';
-    }
-    phone = phone[1];
-    if (_areaCodes.hasOwnProperty(phone)) {
-        return `${_areaCodes[phone].city}, ${_areaCodes[phone].state}`.toUpperCase();
+    const phoneNumber = libphonenumber.parsePhoneNumberFromString(phone, "US");
+    if (phoneNumber && phoneNumber.isValid()) {
+        phone = phone.replace(/^\+?[10]/, '').replace(/[^0-9]/g, '').match(/^([0-9]{3})/);
+        if (!phone) {
+            return 'Location Unknown';
+        }
+        phone = phone[1];
+        if (_areaCodes.hasOwnProperty(phone)) {
+            return `${_areaCodes[phone].city}, ${_areaCodes[phone].state}`.toUpperCase();
 
+        }
     }
-    return 'Unknown';
+    return '';
 });
 
 // TODO: Add administrator option to set local ("US", etc..)
