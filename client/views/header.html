@@ -17,14 +17,14 @@
             </li>
           {{else}}
             {{#if notloggedin}}
-              <li {{active "login"}}>
+              <li class="nav-item {{active 'login'}}">
                 <a class="nav-link" href="{{pathFor 'login'}}">Please Login</a>
               </li>
             {{else}}
-              <li {{active "home"}}>
+              <li class="nav-item {{active 'home'}}">
                 <a class="nav-link" href="{{pathFor 'home'}}">Home</a>
               </li>
-              <li {{active "conferences"}}>
+              <li class="nav-item {{active 'conferences'}}">
                 <a class="nav-link" href="{{pathFor 'conferences'}}">Conferences</a>
               </li>
               <li class="nav-item dropdown">
@@ -36,7 +36,7 @@
                   <!--<div class="dropdown-divider"></div>-->
                 </div>
               </li>
-              <li {{active "about"}}>
+              <li class="nav-item {{active 'active'}}">
                 <a class="nav-link" href="{{pathFor 'about'}}">About</a>
               </li>
             {{/if}}

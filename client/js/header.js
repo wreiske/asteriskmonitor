@@ -1,8 +1,8 @@
 Template.header.helpers({
     active: function (page) {
-        if (page == currentpage) {
-            return ' class=nav-item active ';
+        if (page && page == Router.current().route.getName()) {
+            return 'active';
         }
-        return ' class=nav-item';
+        return '';
     }
 });
