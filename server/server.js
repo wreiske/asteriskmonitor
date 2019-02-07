@@ -676,7 +676,7 @@ function StartAMI() {
                 evt.memberTotal = 0;
                 Conferences.insert(evt);
                 ConferenceEvents.insert({
-                    'message': `Conference has began.`,
+                    'message': `Conference has begun.`,
                     'event': 'begin',
                     'starmon_timestamp': Date.now(),
                     'bridgeuniqueid': evt.bridgeuniqueid
@@ -703,7 +703,7 @@ function StartAMI() {
                     evt.conference = evt.meetme;
                     Conferences.insert(evt);
                     ConferenceEvents.insert({
-                        'message': `Conference has began.`,
+                        'message': `Conference has begun.`,
                         'event': 'begin',
                         'starmon_timestamp': Date.now(),
                         'bridgeuniqueid': evt.bridgeuniqueid
