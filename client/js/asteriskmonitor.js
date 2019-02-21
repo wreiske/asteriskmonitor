@@ -82,3 +82,52 @@ Handlebars.registerHelper('md5', function (string) {
 Meteor.setInterval(function () {
     Session.set('secondTicker', new Date().getTime());
 }, 1000);
+
+
+NotificationStatus = ReactiveVar("default");
+if (("Notification" in window)) {
+    window.Notification.requestPermission(function (status) {
+        NotificationStatus.set(status);
+    });
+  }
+  /**
+  * Use composition to expand capabilities of Notifications feature.
+  */
+  NotificationWrapper = function (appIcon = '/images/logo-512.png', title ='Asterisk Monitor', description = '', soundFile) {
+    if (!("Notification" in window)) {
+        alert("This browser does not support system notifications. Please open Asterisk Monitor in a browser that supports notifications.");
+    }
+    /**
+     * A path to a sound file, like /sounds/notification.wav
+     */
+    function playSound(soundFile) {
+        if (soundFile === undefined) return;
+        let audio = document.createElement('audio');
+        audio.src = soundFile;
+        audio.play();
+        audio = undefined;
+    }
+  
+    /**
+     * Show the notification here.
+     */
+    const notification = new window.Notification(title, {
+        body: description,
+        icon: appIcon
+    });
+  
+    notification.onclick = function () {
+        window.focus();
+    };
+    setTimeout(notification.close.bind(notification), 5000);
+  
+    /**
+     * Play the sound.
+     */
+    playSound(soundFile);
+  
+    /**
+     * Return notification object to controller so we can bind click events.
+     */
+    return notification;
+  }

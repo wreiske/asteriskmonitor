@@ -25,7 +25,8 @@ Template.conferences.helpers({
         }, {
             sort: {
                 end_timestamp: -1
-            }
+            },
+            limit: 100
         });
     },
     completed_conf_count: function () {

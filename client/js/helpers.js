@@ -100,7 +100,14 @@ Handlebars.registerHelper('getPhoneNumberCityState', function (phone) {
 
 // TODO: Add administrator option to set local ("US", etc..)
 Handlebars.registerHelper('formatPhoneNumber', function (phone) {
-    return libphonenumber.parsePhoneNumberFromString(phone, "US").formatNational();
+    if (phone) {
+        const p = libphonenumber.parsePhoneNumberFromString(phone, "US");
+        if (p) {
+            return p.formatNational();
+        }
+    } else {
+        return '';
+    }
 });
 
 Handlebars.registerHelper('getPhoneNumberURI', function (phone) {

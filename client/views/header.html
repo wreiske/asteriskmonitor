@@ -46,13 +46,13 @@
           {{/if}}
           {{#if currentUser}}
             <li>
-              <button class="btn btn-link text-light my-2 my-sm-0" type="submit">
+              <a href="{{pathFor 'home'}}" class="btn btn-link text-light my-2 my-sm-0">
                 {{#if currentUser.profile.name}}
                   {{currentUser.profile.name}}
                 {{else}}
                   {{currentUser.emails.[0].address}}
                 {{/if}}
-              </button>
+              </a>
             </li>
           {{/if}}
         </ul>

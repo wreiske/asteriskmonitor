@@ -1,7 +1,15 @@
 const asterisk = require('asterisk-manager');
 const libphonenumber = require('libphonenumber-js');
 
-/* TODO: Remove ability for users to change profile.admin */
+//Temp Cleanup
+//ConferenceEvents.update({'event': 'begin'}, {$set: {'message': 'Conference has begun.'}},{multi: true});
+
+/* 
+TODO: Remove ability for users to change profile.admin 
+TODO: Make the mute, unmute, kick, etc commands generic instead of having separate commands
+for meetme / confbridge. Also need to make a generic function for running AMI commands instead of
+checking the settings and connecting for every individual meteor method.
+*/
 Meteor.users.allow({
     update: function (userId, user, fields, modifier) {
         if (user._id === userId) {
@@ -316,38 +324,7 @@ Meteor.startup(function () {
             // .. do other stuff ..
             return 'baz';
         },
-        meetme_mute_user: function (bridgeuniqueid, bridge, user_id) {
-            if (!Meteor.userId()) {
-                throw new Meteor.Error("not-authorized");
-            }
-            var amiserver = ServerSettings.find({
-                'module': 'ami'
-            }).fetch()[0];
-
-            if (amiserver) {
-                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
-                    var ami = new asterisk(
-                        amiserver.port,
-                        amiserver.host,
-                        amiserver.user,
-                        amiserver.pass,
-                        true);
-                    ami.action({
-                        'action': 'MeetmeMute',
-                        'Meetme': bridge,
-                        'Usernum': user_id,
-                    }, function (err, res) {
-                        if (err) {
-                            throw new Meteor.Error('conf-mute-error', err);
-                        }
-                        return res;
-                    });
-                }
-            } else {
-                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
-            }
-        },
-        meetme_kick_user: function (bridgeuniqueid, bridge, user_id) {
+        meetme_lock: function (bridgeuniqueid, bridge) {
             if (!Meteor.userId()) {
                 throw new Meteor.Error("not-authorized");
             }
@@ -365,13 +342,199 @@ Meteor.startup(function () {
                         true);
                     ami.action({
                         'action': 'Command',
+                        'Command': 'meetme lock ' + bridge,
+                    }, Meteor.bindEnvironment(function (err, res) {
+                        if (err) {
+                            throw new Meteor.Error('conf-lock-error', err);
+                        }
+                        ConferenceEvents.insert({
+                            'message': `Conference is now locked.`,
+                            'event': 'lock',
+                            'starmon_timestamp': Date.now(),
+                            'bridgeuniqueid': bridgeuniqueid
+                        });
+                        return res;
+                    }));
+                }
+            } else {
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
+            }
+        },
+        meetme_unlock: function (bridgeuniqueid, bridge) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'Command',
+                        'Command': 'meetme unlock ' + bridge,
+                    }, Meteor.bindEnvironment(function (err, res) {
+                        if (err) {
+                            throw new Meteor.Error('conf-ulock-error', err);
+                        }
+                        ConferenceEvents.insert({
+                            'message': `Conference is now open.`,
+                            'event': 'unlock',
+                            'starmon_timestamp': Date.now(),
+                            'bridgeuniqueid': bridgeuniqueid
+                        });
+                        return res;
+                    }));
+                }
+            } else {
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
+            }
+        },
+        meetme_mute_user: function (bridgeuniqueid, bridge, user_id) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+
+            const member = ConferenceMembers.findOne({
+                'bridgeuniqueid': bridgeuniqueid,
+                'usernum': user_id,
+                'meetme': bridge
+            });
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'MeetmeMute',
+                        'Meetme': bridge,
+                        'Usernum': user_id,
+                    }, Meteor.bindEnvironment(function (err, res) {
+                        if (err) {
+                            throw new Meteor.Error('conf-mute-error', err);
+                        }
+                        ConferenceMembers.update({
+                            'bridgeuniqueid': bridgeuniqueid,
+                            'usernum': user_id,
+                            'meetme': bridge
+                        }, {
+                            $set: {
+                                'muted': true
+                            }
+                        });
+                        ConferenceEvents.insert({
+                            'message': `${member.calleridname} ${member.calleridnum} is now muted.`,
+                            'event': 'mute',
+                            'starmon_timestamp': Date.now(),
+                            'bridgeuniqueid': bridgeuniqueid
+                        });
+                        return res;
+                    }));
+                }
+            } else {
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
+            }
+        },
+        meetme_unmute_user: function (bridgeuniqueid, bridge, user_id) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
+
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+            const member = ConferenceMembers.findOne({
+                'bridgeuniqueid': bridgeuniqueid,
+                'usernum': user_id,
+                'meetme': bridge
+            });
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'MeetmeUnmute',
+                        'Meetme': bridge,
+                        'Usernum': user_id,
+                    }, Meteor.bindEnvironment(function (err, res) {
+                        if (err) {
+                            throw new Meteor.Error('conf-unmute-error', err);
+                        }
+                        ConferenceMembers.update({
+                            'bridgeuniqueid': bridgeuniqueid,
+                            'usernum': user_id,
+                            'meetme': bridge
+                        }, {
+                            $set: {
+                                'muted': false
+                            }
+                        });
+                        ConferenceEvents.insert({
+                            'message': `${member.calleridname} ${member.calleridnum} is no longer muted.`,
+                            'event': 'unmute',
+                            'starmon_timestamp': Date.now(),
+                            'bridgeuniqueid': bridgeuniqueid
+                        });
+                        return res;
+                    }));
+                }
+            } else {
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
+            }
+        },
+        meetme_kick_user: function (bridgeuniqueid, bridge, user_id) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
+            
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+            const member = ConferenceMembers.findOne({
+                'bridgeuniqueid': bridgeuniqueid,
+                'usernum': user_id,
+                'meetme': bridge
+            });
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'Command',
                         'Command': 'meetme kick ' + bridge + ' ' + user_id,
-                    }, function (err, res) {
+                    }, Meteor.bindEnvironment(function (err, res) {
                         if (err) {
                             throw new Meteor.Error('conf-kick-error', err);
                         }
+
+                        ConferenceEvents.insert({
+                            'message': `${member.calleridname} ${member.calleridnum} has been kicked from the conference.`,
+                            'event': 'kick',
+                            'starmon_timestamp': Date.now(),
+                            'bridgeuniqueid': bridgeuniqueid
+                        });
                         return res;
-                    });
+                    }));
                 }
             } else {
                 throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
@@ -405,6 +568,58 @@ Meteor.startup(function () {
                         if (err) {
                             throw new Meteor.Error('conf-mute-error', err);
                         }
+                        ConferenceMembers.update({
+                            'bridgeuniqueid': bridgeuniqueid,
+                            'usernum': user_id,
+                            'meetme': bridge
+                        }, {
+                            $set: {
+                                'muted': true
+                            }
+                        });
+                        return res;
+                    }));
+                }
+            } else {
+                throw new Meteor.Error('invalid-ami-info', 'Invalid AMI info.');
+            }
+        },
+        conference_unmute_user: function (bridgeuniqueid, bridge, channel) {
+            if (!Meteor.userId()) {
+                throw new Meteor.Error("not-authorized");
+            }
+            check(bridge, Number);
+            check(channel, String);
+
+            var amiserver = ServerSettings.find({
+                'module': 'ami'
+            }).fetch()[0];
+
+            if (amiserver) {
+                if (amiserver.port && amiserver.host && amiserver.user && amiserver.pass) {
+                    var ami = new asterisk(
+                        amiserver.port,
+                        amiserver.host,
+                        amiserver.user,
+                        amiserver.pass,
+                        true);
+                    ami.action({
+                        'action': 'confbridgeunmute',
+                        'conference': bridge,
+                        'channel': channel,
+                    }, Meteor.bindEnvironment(function (err, res) {
+                        if (err) {
+                            throw new Meteor.Error('conf-unmute-error', err);
+                        }
+                        ConferenceMembers.update({
+                            'bridgeuniqueid': bridgeuniqueid,
+                            'usernum': user_id,
+                            'meetme': bridge
+                        }, {
+                            $set: {
+                                'muted': false
+                            }
+                        });
                         return res;
                     }));
                 }

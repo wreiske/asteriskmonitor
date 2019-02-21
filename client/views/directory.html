@@ -35,8 +35,8 @@
                 <tr>
                   <th>Name</th>
                   <th>Phone</th>
-                  <th>Type</th>
-                  <th>Added</th>
+                  <th class="d-none d-sm-table-cell">Type</th>
+                  <th class="d-none d-md-table-cell">Added</th>
                 </tr>
               </thead>
               <tbody>
@@ -44,8 +44,8 @@
                 <tr>
                   <td class="p-2">{{name}}<br /><small>{{getPhoneNumberCityState phoneNumber}}</small></td>
                   <td class="p-2"><a class="btn btn-sm btn-secondary" href="{{getPhoneNumberURI phoneNumber}}">{{{phoneTypeIcon phoneNumber}}} {{formatPhoneNumber phoneNumber}}</a></td>
-                  <td class="p-2">{{type}}</td>
-                  <td class="p-2">{{reactiveTime starmon_timestamp}}</td>
+                  <td class="p-2 d-none d-sm-table-cell">{{type}}</td>
+                  <td class="p-2 d-none d-md-table-cell">{{reactiveTime starmon_timestamp}}</td>
                 </tr>
                 {{/each}}
               </tbody>

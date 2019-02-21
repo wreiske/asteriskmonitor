@@ -1,4 +1,6 @@
 <template name="ConferenceSingle">
+    <audio id="sound-join" src="/sounds/join-conference.wav" type="audio/wav"></audio>
+    <audio id="sound-leave" src="/sounds/leave-conference.wav" type="audio/wav"></audio>
     <main role="main" class="container-fluid">
         <div style="display:none;" id="error" class="card bg-danger">
             <div class="card-header">
@@ -37,7 +39,6 @@
                     </div>
                     <input type="text" readonly class="form-control" value="{{confShareUrl}}" id="permalink" aria-label="Permalink" aria-describedby="share-addon">
                 </div>
-
                 {{#if end_timestamp}}
                   <div class="card bg-default">
                     <div class="card-body">
@@ -49,7 +50,19 @@
                     </div>
                   </div>
                 {{else}}
-                  <div class="card bg-default">
+                <div class="card bg-default">
+                  <div class="card-body">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="switch-notification-sounds" checked>
+                      <label class="custom-control-label" for="switch-notification-sounds">Enable Join / Leave Notification Sounds</label>
+                    </div>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="switch-lock-conference">
+                        <label class="custom-control-label" for="switch-lock-conference">Lock Conference</label>
+                      </div>
+                  </div>
+                </div>
+                  <div class="card bg-default mt-3">
                     <div class="card-header">
                       Members
                       <span class="badge badge-info pull-right">{{active_member_count}} active members</span>
@@ -109,10 +122,17 @@
                                   <i class="fa fa-ban" aria-hidden="true"></i>
                                   <span class="d-none d-xl-inline">Kick</span>
                                 </a>
-                                <a href="#" class="btn btn-sm btn-secondary conf-mute-member">
-                                  <i class="fa fa-microphone-slash" aria-hidden="true"></i>
-                                  <span class="d-none d-xl-inline">Mute</span>
-                                </a>
+                                {{#if muted}}
+                                  <a href="#" class="btn btn-sm btn-warning conf-unmute-member">
+                                    <i class="fa fa-microphone-slash" aria-hidden="true"></i>
+                                    <span class="d-none d-xl-inline">Muted</span>
+                                  </a>
+                                {{else}}
+                                  <a href="#" class="btn btn-sm btn-secondary conf-mute-member">
+                                    <i class="fa fa-microphone" aria-hidden="true"></i>
+                                    <span class="d-none d-xl-inline">Mute</span>
+                                  </a>
+                                {{/if}}
                                 <a href="#" class="btn btn-sm btn-info" onmousedown="$('#member_{{_id}}').modal({show:true});">
                                   <i class="fa fa-info-circle" aria-hidden="true"></i>
                                   <span class="d-none d-xl-inline">Info</span>
@@ -150,9 +170,15 @@
                                 <button href="#" class="btn btn-lg btn-danger conf-kick-member">
                                   <i class="fa fa-ban" aria-hidden="true"></i>
                                 </button>
-                                <button href="#" class="btn btn-lg btn-secondary conf-mute-member">
-                                  <i class="fa fa-microphone-slash" aria-hidden="true"></i>
-                                </button>
+                                {{#if muted}}
+                                    <button href="#" class="btn btn-lg btn-warning conf-unmute-member">
+                                      <i class="fa fa-microphone-slash" aria-hidden="true"></i>
+                                    </button>
+                                {{else}}
+                                  <button href="#" class="btn btn-lg btn-secondary conf-mute-member">
+                                    <i class="fa fa-microphone" aria-hidden="true"></i>
+                                  </button>
+                                {{/if}}
                               </div>
                             </div>
                           </div>
@@ -245,7 +271,6 @@
                                   <p class="my-0">Left: {{reactiveTime leave_timestamp}}</p>
                                 </div>
                               </div>
-
                             </div>
                           </div>
                         {{/each}}

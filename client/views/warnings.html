@@ -11,4 +11,15 @@
         </div>
         {{/unless}}
     {{/if}}
+
+    {{#if notificationsDisabled}}
+    <div class="card bg-danger">
+            <div class="card-header">
+                <i class="fa fa-bell" aria-hidden="true"></i> Notification Settings
+            </div>
+            <div class="card-body">
+                Please allow Asterisk Monitor to send you notifications.
+            </div>
+        </div>
+    {{/if}}
 </template>
