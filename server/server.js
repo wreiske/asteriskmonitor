@@ -1,5 +1,6 @@
-const asterisk = require('asterisk-manager');
-const libphonenumber = require('libphonenumber-js');
+import asterisk from 'asterisk-manager';
+import { libphonenumber } from 'libphonenumber-js';
+import { FastRender } from 'meteor/staringatlights:fast-render';
 
 //Temp Cleanup
 //ConferenceEvents.update({'event': 'begin'}, {$set: {'message': 'Conference has begun.'}},{multi: true});
@@ -47,6 +48,46 @@ Meteor.publish('UserCount', function () {
 });
 
 Meteor.startup(function () {
+
+    FastRender.onAllRoutes(function () {
+        this.subscribe('AmiStatus');
+        this.subscribe('userInfo');
+    });
+
+    FastRender.route('/admin', function () {
+        this.subscribe('ServerSettings');
+    });
+
+    FastRender.route('/events/calls', function () {
+        this.subscribe('AmiLog');
+    });
+
+    FastRender.route('/events/amilog', function () {
+        this.subscribe('AmiLog');
+    });
+    
+    FastRender.route('/conferences', function () {
+        this.subscribe('Conferences');
+    });
+    
+    FastRender.route('/directory', function () {
+        this.subscribe('Directory');
+    });
+    
+    FastRender.route('/conferences', function () {
+        this.subscribe('Conferences');
+    });
+    
+    FastRender.route('/conference/:_bridgeuniqueid', function (params) {
+        this.subscribe('ConferenceEvents', params._bridgeuniqueid);
+        this.subscribe('ConferenceSingle', params._bridgeuniqueid);
+        this.subscribe('ConferenceMembers', params._bridgeuniqueid);
+    });
+
+    FastRender.route('/events/queue', function () {
+        this.subscribe('Queue');
+    });
+
     Meteor.publish('AmiLog', function () {
         if (this.userId) {
             return AmiLog.find({}, {
@@ -70,7 +111,15 @@ Meteor.startup(function () {
 
     Meteor.publish('Conferences', function () {
         if (this.userId) {
-            return Conferences.find();
+            return Conferences.find({}, {
+                fields: {
+                    bridgeuniqueid: 1,
+                    conference: 1,
+                    memberTotal: 1, 
+                    end_timestamp: 1,
+                    starmon_timestamp: 1
+                }
+            });
         } else {
             this.ready();
         }
