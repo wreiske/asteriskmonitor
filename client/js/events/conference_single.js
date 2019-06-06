@@ -13,7 +13,7 @@ Template.ConferenceSingle.helpers({
     Session.get("secondTicker");
     let talkCounter = this.talkTime;
     if (this.talking) {
-      talkCounter = this.talkTime + Math.abs((moment(TimeSync.serverTime()) - this.speak_timestamp) / 1000);
+      talkCounter = this.talkTime + Math.abs((moment(TimeSync.serverTime() || Date.now()) - this.speak_timestamp) / 1000);
     }
     if (talkCounter) {
       return moment().startOf('day')
@@ -239,7 +239,7 @@ Template.ConferenceSingle.onRendered(function () {
   }
   const confEvents = ConferenceEvents.find({
     starmon_timestamp: {
-      $gt: TimeSync.serverTime()
+      $gt: TimeSync.serverTime() || Date.now()
     }
   });
   activeConfObserver = confEvents.observe({

@@ -78,7 +78,7 @@ Template.registerHelper('prettyTimeShort', function (time = Date.now()) {
 });
 
 Handlebars.registerHelper('currentYear', function () {
-    return moment(TimeSync.serverTime()).year();
+    return moment(TimeSync.serverTime() || Date.now()).year();
 });
 
 // TODO: Make i18n....
@@ -138,6 +138,6 @@ Handlebars.registerHelper('phoneTypeIcon', function (phone) {
                 break;
         }
     } else {
-        return '<i class="fa fa-phone"></i>'
+        return '<i class="fa fa-phone"></i>';
     }
 });

@@ -32,7 +32,7 @@ Template.registerHelper('reactiveTime', function (time) {
     if (typeof time === 'undefined') {
         time = this.starmon_timestamp;
     }
-    return moment(time).from(TimeSync.serverTime());
+    return moment(time).from(TimeSync.serverTime() || Date.now());
 });
 
 Template.registerHelper('elapsedTime', function (time, time2) {
@@ -53,7 +53,7 @@ Handlebars.registerHelper('moment', function (time) {
     if (typeof time === 'undefined') {
         time = this.starmon_timestamp;
     }
-    return moment(time).from(TimeSync.serverTime());
+    return moment(time).from(TimeSync.serverTime() || Date.now());
 });
 
 Handlebars.registerHelper('inbox_count', function () {
