@@ -792,12 +792,18 @@ function StartAMI() {
                     talking = true;
                 } else {
                     const member = ConferenceMembers.findOne({
-                        uniqueid: evt.uniqueid
+                        uniqueid: evt.uniqueid,
+                        leave_timestamp: {
+                            $exists: false
+                        }
                     });
                     talkTime = Math.abs((new Date().getTime() - member.speak_timestamp) / 1000);
                 }
                 ConferenceMembers.update({
-                    uniqueid: evt.uniqueid
+                    uniqueid: evt.uniqueid,
+                    leave_timestamp: {
+                        $exists: false
+                    }
                 }, {
                     $set: {
                         speak_timestamp: Date.now(),
@@ -851,7 +857,10 @@ function StartAMI() {
 
                 // Remove member from list
                 ConferenceMembers.update({
-                    uniqueid: evt.uniqueid
+                    uniqueid: evt.uniqueid,
+                    leave_timestamp: {
+                        $exists: false
+                    }
                 }, {
                     $set: {
                         leave_timestamp: Date.now(),
@@ -957,14 +966,20 @@ function StartAMI() {
                     talking = true;
                 } else {
                     const member = ConferenceMembers.findOne({
-                        uniqueid: evt.uniqueid
+                        uniqueid: evt.uniqueid,
+                        leave_timestamp: {
+                            $exists: false
+                        }
                     });
                     if (member) {
                         talkTime = Math.abs((new Date().getTime() - member.speak_timestamp) / 1000);
                     }
                 }
                 ConferenceMembers.update({
-                    uniqueid: evt.uniqueid
+                    uniqueid: evt.uniqueid,
+                    leave_timestamp: {
+                        $exists: false
+                    }
                 }, {
                     $set: {
                         speak_timestamp: Date.now(),
@@ -998,7 +1013,10 @@ function StartAMI() {
 
                     // Remove member from list
                     ConferenceMembers.update({
-                        uniqueid: evt.uniqueid
+                        uniqueid: evt.uniqueid,
+                        leave_timestamp: {
+                            $exists: false
+                        }
                     }, {
                         $set: {
                             leave_timestamp: Date.now(),
