@@ -56,20 +56,6 @@ Handlebars.registerHelper('moment', function (time) {
     return moment(time).from(TimeSync.serverTime());
 });
 
-Handlebars.registerHelper('isadmin', function () {
-    if (Meteor.user() && Meteor.user().admin) {
-        try {
-            if (Meteor.user().admin == 1) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (err) {
-            return false;
-        }
-    }
-});
-
 Handlebars.registerHelper('inbox_count', function () {
     if (Meteor.userId()) {
         return Messages.find().count();

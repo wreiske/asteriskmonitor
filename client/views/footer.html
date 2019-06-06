@@ -17,7 +17,7 @@
           </span>
         </span>
         {{#if currentUser}}
-          {{#if isadmin}}
+          {{#if isInRole 'admin'}}
           <div>
             <a class="btn btn btn-primary" href="/admin">
               Admin<span class="d-none d-lg-inline">istration Panel</span>

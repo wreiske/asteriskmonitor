@@ -1,6 +1,8 @@
 import asterisk from 'asterisk-manager';
 import { libphonenumber } from 'libphonenumber-js';
 import { FastRender } from 'meteor/staringatlights:fast-render';
+import { Roles } from 'meteor/alanning:roles'
+import _ from 'lodash';
 
 //Temp Cleanup
 //ConferenceEvents.update({'event': 'begin'}, {$set: {'message': 'Conference has begun.'}},{multi: true});
@@ -26,8 +28,7 @@ Meteor.publish('userInfo', function () {
         return Meteor.users.find(this.userId, {
             fields: {
                 emails: 1,
-                profile: 1,
-                admin: 1
+                profile: 1
             }
         });
     } else {
@@ -48,6 +49,16 @@ Meteor.publish('UserCount', function () {
 });
 
 Meteor.startup(function () {
+
+    const users = Meteor.users.find().fetch();
+    _.each(users, function(user){
+        // Make sure all users are part of the users group
+        Roles.addUsersToRoles(user._id, ['user']);
+        if(user.admin) {
+            // Make sure old asterisk monitor admins get the new roles
+            Roles.addUsersToRoles(user._id, ['admin']);
+        }
+    });
 
     FastRender.onAllRoutes(function () {
         this.subscribe('AmiStatus');
@@ -102,7 +113,7 @@ Meteor.startup(function () {
     });
 
     Meteor.publish('ServerSettings', function () {
-        if (this.userId) {
+        if (this.userId && Roles.userIsInRole(this.userId, ['admin'])) {
             return ServerSettings.find();
         } else {
             this.ready();
@@ -722,13 +733,12 @@ Meteor.startup(function () {
                 username: userAdmin.username,
                 password: userAdmin.password
             });
-
+            Roles.addUsersToRoles(user._id, ['admin', 'user']);
             Meteor.users.update(userId, {
                 $set: {
                     profile: {
                         name: userAdmin.profile.name,
-                    },
-                    admin: 1
+                    }
                 }
             });
         }
@@ -758,7 +768,7 @@ Accounts.validateNewUser(function (user) {
 
 Accounts.onCreateUser(function (options, user) {
     if (Meteor.users.find().count() == 0) {
-        user.admin = true;
+        user.roles = ['admin','user'];
     }
     if (typeof user.services.google !== 'undefined') {
         user.emails = [{

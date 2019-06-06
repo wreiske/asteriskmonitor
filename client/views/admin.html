@@ -1,6 +1,6 @@
 <template name="admin">
     <main role="main" class="container">
-        {{#if isadmin}} {{>adminstart}} {{else}} {{>notadmin}} {{/if}}
+        {{#if isInRole 'admin'}} {{>adminstart}} {{else}} {{>notadmin}} {{/if}}
     </main>
 </template>
 <template name="adminstart">

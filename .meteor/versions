@@ -3,6 +3,7 @@ accounts-google@1.3.2
 accounts-oauth@1.1.16
 accounts-password@1.5.1
 accounts-ui-bootstrap-4@1.0.0
+alanning:roles@1.2.16
 allow-deny@1.1.0
 autoupdate@1.6.0
 babel-compiler@7.3.4
