@@ -13,8 +13,20 @@ TODO: Make the mute, unmute, kick, etc commands generic instead of having separa
 for meetme / confbridge. Also need to make a generic function for running AMI commands instead of
 checking the settings and connecting for every individual meteor method.
 */
+
+const allowedFields = ['profile', 'username'];
 Meteor.users.allow({
     update: function (userId, user, fields, modifier) {
+        let good = true;
+        _.each(fields, function (field) {
+            if (!allowedFields.includes(field)) {
+                console.log('has field not allowed');
+                good = false;
+            }
+        });
+        if (!good) {
+            return false;
+        }
         if (user._id === userId) {
             Meteor.users.update({
                 _id: userId
