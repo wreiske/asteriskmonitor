@@ -99,6 +99,24 @@ Meteor.startup(function () {
         this.subscribe('Queue');
     });
 
+    Directory._ensureIndex({
+        phoneNumber: 1,
+        type: 1,
+    });
+    
+    Directory._ensureIndex({
+        phoneNumber: 1,
+    }, {
+        unique: true
+    });
+
+    Conferences._ensureIndex({
+        bridgeuniqueid: 1,
+    }, {
+        unique: true
+    });
+
+
     Meteor.publish('AmiLog', function () {
         if (this.userId) {
             return AmiLog.find({}, {
