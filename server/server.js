@@ -314,7 +314,7 @@ Meteor.startup(function () {
 
         },
         save_ami: function (host, port, user, pass) {
-            if (!Meteor.userId()) {
+            if (!Meteor.userId() || !Roles.userIsInRole(Meteor.userId(), ['admin'])) {
                 throw new Meteor.Error("not-authorized");
             }
             check(host, String);
@@ -378,7 +378,7 @@ Meteor.startup(function () {
             }
         },
         StartAMI: function () {
-            if (!Meteor.userId()) {
+            if (!Meteor.userId() || !Roles.userIsInRole(Meteor.userId(), ['admin'])) {
                 throw new Meteor.Error("not-authorized");
             }
             // .. do other stuff ..
