@@ -61,19 +61,27 @@ Meteor.publish('UserCount', function () {
 });
 
 Meteor.publish('ActiveConferencesCount', function () {
-    Counts.publish(this, 'active-conferences-count', Conferences.find({
-        end_timestamp: {
-            $exists: false
-        }
-    }));
+    if (this.userId) {
+        Counts.publish(this, 'active-conferences-count', Conferences.find({
+            end_timestamp: {
+                $exists: false
+            }
+        }));
+    } else {
+        this.ready();
+    }
 });
 
 Meteor.publish('CompleteConferencesCount', function () {
-    Counts.publish(this, 'complete-conferences-count', Conferences.find({
-        end_timestamp: {
-            $exists: true
-        }
-    }));
+    if (this.userId) {
+        Counts.publish(this, 'complete-conferences-count', Conferences.find({
+            end_timestamp: {
+                $exists: true
+            }
+        }));
+    } else {
+        this.ready();
+    }
 });
 
 Meteor.startup(function () {
@@ -91,6 +99,7 @@ Meteor.startup(function () {
     FastRender.onAllRoutes(function () {
         this.subscribe('AmiStatus');
         this.subscribe('userInfo');
+        this.subscribe('UserCount');
     });
 
     FastRender.route('/admin', function () {
