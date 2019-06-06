@@ -179,6 +179,9 @@ Meteor.startup(function () {
                     memberTotal: 1,
                     end_timestamp: 1,
                     starmon_timestamp: 1
+                },
+                sort: {
+                    starmon_timestamp: -1
                 }
             });
         } else {
@@ -199,6 +202,9 @@ Meteor.startup(function () {
                     memberTotal: 1,
                     end_timestamp: 1,
                     starmon_timestamp: 1
+                },
+                sort: {
+                    end_timestamp: -1
                 },
                 limit: 100
             });
