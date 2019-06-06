@@ -11,11 +11,7 @@ Template.conferences.helpers({
         });
     },
     active_conf_count: function () {
-        return Conferences.find({
-            'end_timestamp': {
-                $exists: false
-            }
-        }).count();
+        return Counts.get('active-conferences-count');
     },
     completed_conference: function () {
         return Conferences.find({
@@ -25,15 +21,10 @@ Template.conferences.helpers({
         }, {
             sort: {
                 end_timestamp: -1
-            },
-            limit: 100
+            }
         });
     },
     completed_conf_count: function () {
-        return Conferences.find({
-            'end_timestamp': {
-                $exists: true
-            }
-        }).count();
+        return Counts.get('complete-conferences-count');
     },
 });

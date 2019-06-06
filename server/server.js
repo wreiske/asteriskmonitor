@@ -60,6 +60,22 @@ Meteor.publish('UserCount', function () {
     Counts.publish(this, 'user-count', Meteor.users.find());
 });
 
+Meteor.publish('ActiveConferencesCount', function () {
+    Counts.publish(this, 'active-conferences-count', Conferences.find({
+        end_timestamp: {
+            $exists: false
+        }
+    }));
+});
+
+Meteor.publish('CompleteConferencesCount', function () {
+    Counts.publish(this, 'complete-conferences-count', Conferences.find({
+        end_timestamp: {
+            $exists: true
+        }
+    }));
+});
+
 Meteor.startup(function () {
 
     const users = Meteor.users.find().fetch();
@@ -89,16 +105,16 @@ Meteor.startup(function () {
         this.subscribe('AmiLog');
     });
     
-    FastRender.route('/conferences', function () {
-        this.subscribe('Conferences');
-    });
-    
     FastRender.route('/directory', function () {
         this.subscribe('Directory');
     });
     
     FastRender.route('/conferences', function () {
-        this.subscribe('Conferences');
+        this.subscribe('ActiveConferences');
+        this.subscribe('ActiveConferencesCount');
+
+        this.subscribe('CompleteConferences');
+        this.subscribe('CompleteConferencesCount');
     });
     
     FastRender.route('/conference/:_bridgeuniqueid', function (params) {
@@ -115,7 +131,7 @@ Meteor.startup(function () {
         phoneNumber: 1,
         type: 1,
     });
-    
+
     Directory._ensureIndex({
         phoneNumber: 1,
     }, {
@@ -150,16 +166,41 @@ Meteor.startup(function () {
         }
     });
 
-    Meteor.publish('Conferences', function () {
+    Meteor.publish('ActiveConferences', function () {
         if (this.userId) {
-            return Conferences.find({}, {
+            return Conferences.find({
+                end_timestamp: {
+                    $exists: false
+                }
+            }, {
                 fields: {
                     bridgeuniqueid: 1,
                     conference: 1,
-                    memberTotal: 1, 
+                    memberTotal: 1,
                     end_timestamp: 1,
                     starmon_timestamp: 1
                 }
+            });
+        } else {
+            this.ready();
+        }
+    });
+
+    Meteor.publish('CompleteConferences', function () {
+        if (this.userId) {
+            return Conferences.find({
+                end_timestamp: {
+                    $exists: true
+                }
+            }, {
+                fields: {
+                    bridgeuniqueid: 1,
+                    conference: 1,
+                    memberTotal: 1,
+                    end_timestamp: 1,
+                    starmon_timestamp: 1
+                },
+                limit: 100
             });
         } else {
             this.ready();
