@@ -819,7 +819,7 @@ Meteor.startup(function () {
                 username: userAdmin.username,
                 password: userAdmin.password
             });
-            Roles.addUsersToRoles(user._id, ['admin', 'user']);
+            Roles.addUsersToRoles(userId, ['admin', 'user']);
             Meteor.users.update(userId, {
                 $set: {
                     profile: {
