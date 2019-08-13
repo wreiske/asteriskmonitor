@@ -2,7 +2,7 @@ PBXMON / "Asterisk monitor"
 =====
 *mon (Asterisk Monitor) is an open source real time asterisk web monitor built with Meteor.js
 
-![PBXMonitor](https://raw.githubusercontent.com/wreiske/asteriskmonitor/master/public/images/logo.svg)
+![PBXMonitor](https://raw.githubusercontent.com/wreiske/asteriskmonitor/master/public/images/logo.svg?sanitize=true)
 
 https://pbxmon.com/
 
