@@ -1,0 +1,10 @@
+os:
+  - linux
+language: node_js
+node_js:
+  - "10.16.0"
+before_install:
+  - "curl https://install.meteor.com | /bin/sh"
+script:
+  - meteor npm install
+  - npm run test
