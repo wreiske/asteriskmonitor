@@ -30,3 +30,11 @@ script:
   - cd /tmp/build-test/bundle/programs/server
   - npm install
   - cd -
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: "/tmp/build/asteriskmonitor.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true

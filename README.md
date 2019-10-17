@@ -1,4 +1,5 @@
 # PBXMON / "Asterisk monitor"
+[![Build Status](https://travis-ci.org/wreiske/asteriskmonitor.svg?branch=master)](https://travis-ci.org/wreiske/asteriskmonitor)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/wreiske/asteriskmonitor.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/wreiske/asteriskmonitor/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/wreiske/asteriskmonitor.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/wreiske/asteriskmonitor/context:javascript)
 
