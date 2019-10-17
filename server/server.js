@@ -17,6 +17,8 @@ Meteor.startup(() => {
 	WebApp.rawConnectHandlers.use(
 		Meteor.bindEnvironment((req, res, next) => {
             req.dynamicHead = `${(req.dynamicHead || '')}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha256-MSYVjWgrr6UL/9eQfQvOyt6/gsxb6dpwI1zqM5DbLCs=" crossorigin="anonymous"></script>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40=" crossorigin="anonymous" />
             `;
             req.dynamicBody = `
@@ -26,6 +28,7 @@ Meteor.startup(() => {
             }
             </style>
             <script>
+            fullyLoaded = false;
             setTimeout(function () {
                 document.getElementById('loading-error').style.display = 'block';
             }, 5000);
