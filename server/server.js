@@ -2,7 +2,6 @@ import asterisk from 'asterisk-manager';
 import { libphonenumber } from 'libphonenumber-js';
 import { FastRender } from 'meteor/staringatlights:fast-render';
 import { Roles } from 'meteor/alanning:roles'
-import _ from 'lodash';
 
 //Temp Cleanup
 //ConferenceEvents.update({'event': 'begin'}, {$set: {'message': 'Conference has begun.'}},{multi: true});

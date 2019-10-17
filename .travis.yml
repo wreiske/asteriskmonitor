@@ -1,0 +1,40 @@
+os:
+  - linux
+language: node_js
+node_js:
+  - "10.16.0"
+before_cache:
+- rm -rf $HOME/build/wreiske/asteriskmonitor/.meteor/local/log
+- rm -rf $HOME/build/wreiske/asteriskmonitor/.meteor/local/run
+- rm -rf $HOME/build/wreiske/asteriskmonitor/.meteor/local/db
+cache:
+  directories:
+  - "$HOME/node_modules"
+  - "$HOME/.meteor"
+  - "$HOME/.npm"
+  - "$HOME/.node-gyp"
+  - "$HOME/build/wreiske/asteriskmonitor/node_modules"
+  - "$HOME/build/wreiske/asteriskmonitor/.meteor/local"
+before_install:
+- if [ ! -e "$HOME/.meteor/meteor" ]; then curl https://install.meteor.com | sed s/--progress-bar/-sL/g | /bin/sh; fi
+install:
+- export PATH="$HOME/.meteor:$PATH"
+script:
+  - mkdir /tmp/build
+  - meteor --version
+  - travis_retry meteor npm install
+  - |-
+  - travis_retry meteor build --headless /tmp/build --architecture os.linux.x86_64 --server-only
+  - mkdir /tmp/build-test
+  - tar -xf /tmp/build/asteriskmonitor.tar.gz -C /tmp/build-test/
+  - cd /tmp/build-test/bundle/programs/server
+  - npm install
+  - cd -
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: "/tmp/build/asteriskmonitor.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true
