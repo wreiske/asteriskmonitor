@@ -21,11 +21,8 @@ momentjs:moment
 mizzao:timesync
 iron:router
 mizzao:user-status
-jquery
 accounts-google@1.3.2
 jparker:crypto-md5
-fortawesome:fontawesome
-underscore@1.0.10
 useraccounts:iron-routing
 staringatlights:fast-render
 fastclick

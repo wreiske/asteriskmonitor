@@ -44,7 +44,7 @@ Template.adminstart.events = {
                 function (error, result) {
                     if (error) {
                         error_box.append('<p>Error saving server settings:</p>');
-                        error_box.append('<p>' + error + '</p>');
+                        error_box.append(`<p>${error}</p>`);
                         toastr.error(error, 'Error!');
                         $("#error").fadeIn();
                     } else {

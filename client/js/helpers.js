@@ -21,6 +21,7 @@ Handlebars.registerHelper('amiblock', function (context) {
     html = html + '</form>';
     return html;
 });
+
 Handlebars.registerHelper('amitable', function (context) {
     var html = '<div class="table-responsive"><table class="table table-hover"><thead><tr>';
 
@@ -45,6 +46,7 @@ Handlebars.registerHelper('amitable', function (context) {
     html = html + '</tr></tbody></table></div>';
     return html;
 });
+
 copyToClipboard = str => {
     const el = document.createElement('textarea'); // Create a <textarea> element
     el.value = str; // Set its value to the string that you want copied
@@ -70,9 +72,11 @@ copyToClipboard = str => {
 Template.registerHelper('prettyTime', function (time = Date.now()) {
     return moment(time).format('MMMM Do YYYY, h:mm:ss a');
 });
+
 Template.registerHelper('prettyDateShort', function (time = Date.now()) {
     return moment(time).format('MMM Do YYYY');
 });
+
 Template.registerHelper('prettyTimeShort', function (time = Date.now()) {
     return moment(time).format('h:mm:ss a');
 });
@@ -92,7 +96,6 @@ Handlebars.registerHelper('getPhoneNumberCityState', function (phone) {
         phone = phone[1];
         if (_areaCodes.hasOwnProperty(phone)) {
             return `${_areaCodes[phone].city}, ${_areaCodes[phone].state}`.toUpperCase();
-
         }
     }
     return '';
@@ -124,20 +127,20 @@ Handlebars.registerHelper('phoneTypeIcon', function (phone) {
     if (phoneNumber && phoneNumber.isValid()) {
         switch (phoneNumber.getType()) {
             case "MOBILE":
-                return '<i class="fa fa-mobile"></i>';
+                return '<i class="fas fa-mobile"></i>';
                 break;
             case "FIXED_LINE_OR_MOBILE":
                 // maybe not assume mobile?
-                return '<i class="fa fa-mobile"></i>';
+                return '<i class="fas fa-mobile"></i>';
                 break;
             case "VOIP":
-                return '<i class="fa fa-phone-square"></i>';
+                return '<i class="fas fa-phone-square"></i>';
                 break;
             default:
-                return '<i class="fa fa-phone"></i>';
+                return '<i class="fas fa-phone"></i>';
                 break;
         }
     } else {
-        return '<i class="fa fa-phone"></i>';
+        return '<i class="fas fa-phone"></i>';
     }
 });

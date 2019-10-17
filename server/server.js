@@ -14,11 +14,57 @@ for meetme / confbridge. Also need to make a generic function for running AMI co
 checking the settings and connecting for every individual meteor method.
 */
 
+Meteor.startup(() => {
+	WebApp.rawConnectHandlers.use(
+		Meteor.bindEnvironment((req, res, next) => {
+            req.dynamicHead = `${(req.dynamicHead || '')}
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40=" crossorigin="anonymous" />
+            `;
+            req.dynamicBody = `
+            <style>
+            .longer-than-usual {
+                display:none;
+            }
+            </style>
+            <script>
+            setTimeout(function () {
+                document.getElementById('loading-error').style.display = 'block';
+            }, 5000);
+            if (!fullyLoaded) {
+                setTimeout(function () {
+                    document.getElementById('loading-error-message').innerHTML = 'Something is terribly wrong... Let\\'s try refreshing...';
+                    setTimeout(function () {
+                        if (!fullyLoaded) {
+                            location.reload(true);
+                        }
+                    }, 2000);
+                }, 15000);
+            }
+            </script>
+			<div class="preloader preloader-first">
+                <h2>
+                Loading PBX Monitor <span class="fas fa-spinner fa-spin"></span>
+                <span id="loading-error" class="longer-than-usual">
+                <br />
+                <small id="loading-error-message">This is taking longer than usual... Sorry about that!</small>
+                </span>
+                </h2>
+
+				<object type="image/svg+xml" data="/images/logo.svg">
+					<!-- Fall back to image tag if svg fails -->
+					<img src="/images/logo.svg" />
+				</object>
+			</div>`;
+			next();
+		})
+    );
+});
+
 const allowedFields = ['profile', 'username'];
 Meteor.users.allow({
     update: function (userId, user, fields, modifier) {
         let good = true;
-        _.each(fields, function (field) {
+        fields.forEach(function (field) {
             if (!allowedFields.includes(field)) {
                 console.log('has field not allowed');
                 good = false;
@@ -87,7 +133,7 @@ Meteor.publish('CompleteConferencesCount', function () {
 Meteor.startup(function () {
 
     const users = Meteor.users.find().fetch();
-    _.each(users, function(user){
+    users.forEach(function(user){
         // Make sure all users are part of the users group
         Roles.addUsersToRoles(user._id, ['user']);
         if(user.admin) {
@@ -283,7 +329,7 @@ Meteor.startup(function () {
             }
             // Run through all the old CID information and update it with new if we have it.
             const dirPhones = Directory.find().fetch();
-            _.each(dirPhones, function (item) {
+            dirPhones.forEach(function (item) {
                 AmiStatus.update({
                     calleridnum: item.phoneNumber
                 }, {
@@ -332,7 +378,7 @@ Meteor.startup(function () {
             // TODO: Add checking on rows / cols == null...
             // TODO: this was added quick n dirty under a time crunch
 
-            _.each(csvObject, function (item) {
+            csvObject.forEach(function (item) {
                 check(item, Match.ObjectIncluding({
                     Name: String,
                     Home: String,

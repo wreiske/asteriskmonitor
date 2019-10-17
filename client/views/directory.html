@@ -1,12 +1,12 @@
 <template name="directory">
   <main role="main" class="container">
     <p>
-      <button id="show_import" class="btn btn-primary"><i class="fa fa-plus"></i> Add Number</button>
+      <button id="show_import" class="btn btn-primary"><i class="fas fa-plus"></i> Add Number</button>
     </p>
     <p id="import_csv_wrap">
       <div class="card bg-default">
         <div class="card-header">
-          <i class="fa fa-cloud-upload" aria-hidden="true"></i> Add / Import Numbers
+          <i class="fas fa-cloud-upload" aria-hidden="true"></i> Add / Import Numbers
         </div>
         <div class="card-body">
           <p>Currently only CSV importing of numbers is supported. (But adding one by one will be supported VERY soon.)</p>
@@ -16,15 +16,15 @@
             <label for="csv">CSV File</label>
             <textarea class="form-control" id="csv" rows="3"></textarea>
           </div>
-          <button class="btn btn-success" id="import_csv"><i class="fa fa-plus"></i> Import</button>
-          <button class="btn btn-primary" id="sync_caller_names"><i class="fa fa-refresh"></i> Sync Caller ID Names</button>
+          <button class="btn btn-success" id="import_csv"><i class="fas fa-plus"></i> Import</button>
+          <button class="btn btn-primary" id="sync_caller_names"><i class="fas fa-sync"></i> Sync Caller ID Names</button>
         </div>
       </div>
     </p>
     <p>
       <div class="card bg-default">
         <div class="card-header">
-          <i class="fa fa-list-alt" aria-hidden="true"></i> Directory
+          <i class="fas fa-list-alt" aria-hidden="true"></i> Directory
           <span class="badge badge-secondary pull-right">{{numberCount}}</span>
         </div>
         <div class="card-body">

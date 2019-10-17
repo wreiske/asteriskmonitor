@@ -272,3 +272,8 @@ Template.ConferenceSingle.onRendered(function () {
     }
   });
 });
+
+Template.ConferenceSingle.onDestroyed(function(){
+  activeConfObserver.stop();
+  activeConfObserver = null;
+})

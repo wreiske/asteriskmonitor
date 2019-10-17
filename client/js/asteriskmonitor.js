@@ -75,11 +75,11 @@ if (("Notification" in window)) {
     window.Notification.requestPermission(function (status) {
         NotificationStatus.set(status);
     });
-  }
-  /**
-  * Use composition to expand capabilities of Notifications feature.
-  */
-  NotificationWrapper = function (appIcon = '/images/logo-512.png', title ='Asterisk Monitor', description = '', soundFile) {
+}
+/**
+ * Use composition to expand capabilities of Notifications feature.
+ */
+NotificationWrapper = function (appIcon = '/images/logo-512.png', title = 'Asterisk Monitor', description = '', soundFile) {
     if (!("Notification" in window)) {
         alert("This browser does not support system notifications. Please open Asterisk Monitor in a browser that supports notifications.");
     }
@@ -93,7 +93,7 @@ if (("Notification" in window)) {
         audio.play();
         audio = undefined;
     }
-  
+
     /**
      * Show the notification here.
      */
@@ -101,19 +101,24 @@ if (("Notification" in window)) {
         body: description,
         icon: appIcon
     });
-  
+
     notification.onclick = function () {
         window.focus();
     };
     setTimeout(notification.close.bind(notification), 5000);
-  
+
     /**
      * Play the sound.
      */
     playSound(soundFile);
-  
+
     /**
      * Return notification object to controller so we can bind click events.
      */
     return notification;
-  }
+}
+
+$(window).on('load', function () {
+    fullyLoaded = true;
+    $('.preloader-first').hide();
+});

@@ -19,7 +19,7 @@
           <div class="col">
             <div class="header-conference d-flex justify-content-between mt-3">
               <h1>
-                <i class="fa fa-phone-square text-success" aria-hidden="true"></i>
+                <i class="fas fa-phone-square text-success" aria-hidden="true"></i>
                 <span class="d-none">Conference Room</span> {{conference}}
               </h1>
               <h3 class="text-right">
@@ -35,7 +35,7 @@
                 </h4>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="share-addon"><i class="fa fa-share-square-o" aria-hidden="true"></i></span>
+                        <span class="input-group-text" id="share-addon"><i class="fas fa-share-square" aria-hidden="true"></i></span>
                     </div>
                     <input type="text" readonly class="form-control" value="{{confShareUrl}}" id="permalink" aria-label="Permalink" aria-describedby="share-addon">
                 </div>
@@ -108,8 +108,8 @@
                             <tr data-toggle="member_{{_id}}" class="talking_{{talking}}">
                               <td class="text-center p-2">
                                 {{#if talking}}
-                                <i class="fa fa fa-volume-control-phone text-success"></i> {{else}}
-                                <i class="fa fa-circle-o text-default"></i> {{/if}}
+                                <i class="fas fa-phone-volume text-success"></i> {{else}}
+                                <i class="far fa-circle text-default"></i> {{/if}}
                               </td>
                               <td class="p-2">{{calleridname}}<br /><small>{{getPhoneNumberCityState calleridnum}}</small></td>
                               <td class="p-2"><a class="btn btn-sm btn-secondary" href="{{getPhoneNumberURI calleridnum}}">{{{phoneTypeIcon calleridnum}}} {{formatPhoneNumber calleridnum}}</a></td>
@@ -119,22 +119,22 @@
                               <td class="p-2">{{elapsedHMS starmon_timestamp leave_timestamp}}</td>
                               <td data-conference="{{conference}}" data-channel="{{channel}}" data-meetme="{{meetme}}" data-usernum="{{usernum}}">
                                 <a href="#" class="btn btn-sm btn-danger conf-kick-member">
-                                  <i class="fa fa-ban" aria-hidden="true"></i>
+                                  <i class="fas fa-ban" aria-hidden="true"></i>
                                   <span class="d-none d-xl-inline">Kick</span>
                                 </a>
                                 {{#if muted}}
                                   <a href="#" class="btn btn-sm btn-warning conf-unmute-member">
-                                    <i class="fa fa-microphone-slash" aria-hidden="true"></i>
+                                    <i class="fas fa-microphone-slash" aria-hidden="true"></i>
                                     <span class="d-none d-xl-inline">Muted</span>
                                   </a>
                                 {{else}}
                                   <a href="#" class="btn btn-sm btn-secondary conf-mute-member">
-                                    <i class="fa fa-microphone" aria-hidden="true"></i>
+                                    <i class="fas fa-microphone" aria-hidden="true"></i>
                                     <span class="d-none d-xl-inline">Mute</span>
                                   </a>
                                 {{/if}}
                                 <a href="#" class="btn btn-sm btn-info" onmousedown="$('#member_{{_id}}').modal({show:true});">
-                                  <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                  <i class="fas fa-info-circle" aria-hidden="true"></i>
                                   <span class="d-none d-xl-inline">Info</span>
                                 </a>
                               </td>
@@ -153,7 +153,7 @@
                                   <h5 class="mb-1">
                                     {{calleridname}}
                                     <button href="#" class="btn btn-link pt-0" onmousedown="$('#member_{{_id}}').modal({show:true});">
-                                      <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                      <i class="fas fa-info-circle" aria-hidden="true"></i>
                                     </button>
                                     <br /><small>{{getPhoneNumberCityState calleridnum}}</small>
                                   </h5>
@@ -168,15 +168,15 @@
                               </div>
                               <div class="btn-group-vertical" role="group" data-conference="{{conference}}" data-channel="{{channel}}" data-meetme="{{meetme}}" data-usernum="{{usernum}}">
                                 <button href="#" class="btn btn-lg btn-danger conf-kick-member">
-                                  <i class="fa fa-ban" aria-hidden="true"></i>
+                                  <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                                 {{#if muted}}
                                     <button href="#" class="btn btn-lg btn-warning conf-unmute-member">
-                                      <i class="fa fa-microphone-slash" aria-hidden="true"></i>
+                                      <i class="fas fa-microphone-slash" aria-hidden="true"></i>
                                     </button>
                                 {{else}}
                                   <button href="#" class="btn btn-lg btn-secondary conf-mute-member">
-                                    <i class="fa fa-microphone" aria-hidden="true"></i>
+                                    <i class="fas fa-microphone" aria-hidden="true"></i>
                                   </button>
                                 {{/if}}
                               </div>
@@ -258,7 +258,7 @@
                                   <h5 class="mb-1">
                                     {{calleridname}}
                                     <button href="#" class="btn btn-link pt-0" onmousedown="$('#member_{{_id}}').modal({show:true});">
-                                      <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                      <i class="fas fa-info-circle" aria-hidden="true"></i>
                                     </button>
                                     <br /><small>{{getPhoneNumberCityState calleridnum}}</small>
                                   </h5>

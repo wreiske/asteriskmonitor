@@ -3,7 +3,7 @@ accounts-google@1.3.3
 accounts-oauth@1.1.16
 accounts-password@1.5.1
 accounts-ui-bootstrap-4@1.0.0
-alanning:roles@1.2.16
+alanning:roles@1.2.19
 allow-deny@1.1.0
 autoupdate@1.6.0
 babel-compiler@7.3.4
@@ -38,7 +38,6 @@ email@1.2.3
 es5-shim@4.8.0
 fastclick@1.0.13
 fetch@0.1.1
-fortawesome:fontawesome@4.7.0
 geojson-utils@1.0.10
 google-oauth@1.2.6
 hot-code-push@1.0.4
@@ -58,7 +57,7 @@ iron:url@1.1.0
 jparker:crypto-core@0.1.0
 jparker:crypto-md5@0.1.1
 jquery@1.11.11
-lamhieu:meteorx@2.0.1
+lamhieu:meteorx@2.1.1
 launch-screen@1.1.1
 less@2.8.0
 livedata@1.0.18
