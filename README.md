@@ -22,6 +22,13 @@ Active Conference
 Ended Conference
 ![Ended Conference](https://i.imgur.com/RipwAE6.png)
 
+
+## Environment Variables
+
+PBXMON_GOOGLE_CLIENT_ID: the google client id for login
+PBXMON_GOOGLE_SECRET: the google secret for login
+PBXMON_DOMAIN_RESTRICTION: the domain to restrict logins (example.com)
+
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome.<br />
