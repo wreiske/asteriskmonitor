@@ -2,7 +2,7 @@ os:
   - linux
 language: node_js
 node_js:
-  - "10.16.0"
+  - "12.14.0"
 before_cache:
 - rm -rf $HOME/build/wreiske/asteriskmonitor/.meteor/local/log
 - rm -rf $HOME/build/wreiske/asteriskmonitor/.meteor/local/run
