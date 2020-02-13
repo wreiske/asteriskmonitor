@@ -1,3 +1,9 @@
+const toastr = require('toastr');
+const moment = require('moment');
+toastr.options = {
+    'toastClass': 'toastr',
+    'debug': Meteor.isDevelopment,
+  };
 Handlebars.registerHelper('notloggedin', function () {
     if (Meteor.user()) {
         return false;

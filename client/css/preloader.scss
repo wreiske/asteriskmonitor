@@ -1,3 +1,4 @@
+@import "{}/node_modules/toastr/toastr.scss";
 .preloader {
   margin: 0 auto;
   width: 100%;
@@ -5,27 +6,28 @@
   top: 0;
   position: fixed;
   z-index: 90000;
-}
 
-.preloader:before {
-  content: '';
-  display: block;
-  padding-top: 100%;
+  &:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
 }
 
 .preloader-first {
-  background-color:#1d4054;
+  background-color: #1d4054;
   overflow: hidden;
+
+  h2 {
+    color: #fff;
+    position: sticky;
+    bottom: 25%;
+    margin-top: 50px;
+    text-align: center;
+    z-index: 2;
+  }
 }
 
-.preloader-first h2 {
-  color: #fff;
-  position: sticky;
-  bottom: 25%;
-  margin-top: 50px;
-  text-align: center;
-  z-index: 2;
-}
 .preloader object {
   height: 150px;
   transform-origin: center center;

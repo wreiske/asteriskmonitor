@@ -1,3 +1,5 @@
+const toastr = require('toastr');
+const moment = require('moment');
 Template.ConferenceSingle.helpers({
   event: function () {
     return ConferenceEvents.find({}, {

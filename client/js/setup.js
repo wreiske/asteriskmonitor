@@ -8,7 +8,7 @@ Disable\Enable the continue button when the form isn't valid.
 
 Don't allow this form to be posted if there already is already >= 1 users.
 */
-
+const toastr = require('toastr');
 Template.setup.events = {
     'submit form': function (e) {
         e.preventDefault();

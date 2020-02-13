@@ -1,3 +1,4 @@
+const toastr = require('toastr');
 Template.adminstart.helpers({
     ami: function () {
         return ServerSettings.find({

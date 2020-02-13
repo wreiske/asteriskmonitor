@@ -1,7 +1,7 @@
 import asterisk from 'asterisk-manager';
 import { libphonenumber } from 'libphonenumber-js';
 import { FastRender } from 'meteor/staringatlights:fast-render';
-import { Roles } from 'meteor/alanning:roles'
+import { Roles } from 'meteor/alanning:roles';
 
 //Temp Cleanup
 //ConferenceEvents.update({'event': 'begin'}, {$set: {'message': 'Conference has begun.'}},{multi: true});
@@ -14,8 +14,8 @@ checking the settings and connecting for every individual meteor method.
 */
 
 Meteor.startup(() => {
-	WebApp.rawConnectHandlers.use(
-		Meteor.bindEnvironment((req, res, next) => {
+    WebApp.rawConnectHandlers.use(
+        Meteor.bindEnvironment((req, res, next) => {
             req.dynamicHead = `${(req.dynamicHead || '')}
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha256-MSYVjWgrr6UL/9eQfQvOyt6/gsxb6dpwI1zqM5DbLCs=" crossorigin="anonymous"></script>
@@ -57,8 +57,8 @@ Meteor.startup(() => {
 					<img src="/images/logo.svg" />
 				</object>
 			</div>`;
-			next();
-		})
+            next();
+        })
     );
 });
 
@@ -133,14 +133,30 @@ Meteor.publish('CompleteConferencesCount', function () {
 });
 
 Meteor.startup(function () {
+    const roles = Roles.getAllRoles().fetch();
+
+    if (!roles.find(i => i.name === 'user')) {
+        Roles.createRole('user', {
+            unlessExists: true
+        });
+    }
+    if (!roles.find(i => i.name === 'admin')) {
+        Roles.createRole('admin', {
+            unlessExists: true
+        });
+    }
 
     const users = Meteor.users.find().fetch();
-    users.forEach(function(user){
+    users.forEach(function (user) {
         // Make sure all users are part of the users group
-        Roles.addUsersToRoles(user._id, ['user']);
-        if(user.admin) {
+        if (!Roles.userIsInRole(user._id, ['user'], GlobalSettings.LoginRestrictions.Domain)) {
+            Roles.addUsersToRoles(user._id, ['user'], GlobalSettings.LoginRestrictions.Domain);
+        }
+        if (user.admin) {
             // Make sure old asterisk monitor admins get the new roles
-            Roles.addUsersToRoles(user._id, ['admin']);
+            if (!Roles.userIsInRole(user._id, ['admin'], GlobalSettings.LoginRestrictions.Domain)) {
+                Roles.addUsersToRoles(user._id, ['admin'], GlobalSettings.LoginRestrictions.Domain);
+            }
         }
     });
 
@@ -161,11 +177,11 @@ Meteor.startup(function () {
     FastRender.route('/events/amilog', function () {
         this.subscribe('AmiLog');
     });
-    
+
     FastRender.route('/directory', function () {
         this.subscribe('Directory');
     });
-    
+
     FastRender.route('/conferences', function () {
         this.subscribe('ActiveConferences');
         this.subscribe('ActiveConferencesCount');
@@ -173,7 +189,7 @@ Meteor.startup(function () {
         this.subscribe('CompleteConferences');
         this.subscribe('CompleteConferencesCount');
     });
-    
+
     FastRender.route('/conference/:_bridgeuniqueid', function (params) {
         this.subscribe('ConferenceEvents', params._bridgeuniqueid);
         this.subscribe('ConferenceSingle', params._bridgeuniqueid);
@@ -696,7 +712,7 @@ Meteor.startup(function () {
             if (!Meteor.userId()) {
                 throw new Meteor.Error("not-authorized");
             }
-            
+
             var amiserver = ServerSettings.find({
                 'module': 'ami'
             }).fetch()[0];
@@ -902,7 +918,7 @@ Accounts.validateNewUser(function (user) {
 
 Accounts.onCreateUser(function (options, user) {
     if (Meteor.users.find().count() == 0) {
-        user.roles = ['admin','user'];
+        user.roles = ['admin', 'user'];
     }
     if (typeof user.services.google !== 'undefined') {
         user.emails = [{
