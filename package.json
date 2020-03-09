@@ -8,12 +8,12 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
-    "@babel/runtime": "^7.8.4",
+    "@babel/runtime": "^7.8.7",
     "areacodes": "^0.2.1",
     "asterisk-manager": "^0.1.16",
     "bcrypt": "^3.0.8",
-    "csv-parse": "^4.8.5",
-    "libphonenumber-js": "^1.7.41",
+    "csv-parse": "^4.8.8",
+    "libphonenumber-js": "^1.7.46",
     "meteor-node-stubs": "^0.4.1",
     "moment": "^2.24.0",
     "toastr": "^2.1.4"
