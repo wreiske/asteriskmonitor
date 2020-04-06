@@ -13,7 +13,7 @@
     "asterisk-manager": "^0.1.16",
     "bcrypt": "^3.0.8",
     "csv-parse": "^4.8.8",
-    "libphonenumber-js": "^1.7.46",
+    "libphonenumber-js": "^1.7.47",
     "meteor-node-stubs": "^0.4.1",
     "moment": "^2.24.0",
     "toastr": "^2.1.4"
