@@ -12,7 +12,7 @@
     "areacodes": "^0.2.1",
     "asterisk-manager": "^0.1.16",
     "bcrypt": "^3.0.8",
-    "csv-parse": "^4.8.8",
+    "csv-parse": "^4.8.9",
     "libphonenumber-js": "^1.7.50",
     "meteor-node-stubs": "^0.4.1",
     "moment": "^2.24.0",
