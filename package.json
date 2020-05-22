@@ -15,7 +15,7 @@
     "csv-parse": "^4.8.8",
     "libphonenumber-js": "^1.7.50",
     "meteor-node-stubs": "^0.4.1",
-    "moment": "^2.24.0",
+    "moment": "^2.25.1",
     "toastr": "^2.1.4"
   }
 }
